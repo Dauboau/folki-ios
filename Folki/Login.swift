@@ -33,6 +33,7 @@ struct Login: View {
     @State private var user = ""
     @State private var password = ""
     
+    @State var progress = 0.2
     var loginTip = LoginTip()
     
     var body: some View {
@@ -61,22 +62,19 @@ struct Login: View {
                     SecureField("Senha", text: $password)
                         .textFieldStyle(.roundedBorder)
                     
-                }
-                .padding(.horizontal)
-                
-                VStack{
-                    
-                    Spacer()
-                    
                     NavigationLink(destination: Login(university:"A")) {
                         Text("Login")
-                            .padding(.horizontal, 100)
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.primaryPurple)
                     .controlSize(.regular)
+                    .padding(.top,20)
+                    
                     
                 }
+                .padding(.horizontal)
+                .frame(maxWidth:500)
                 
             }
             
@@ -102,3 +100,9 @@ struct Login: View {
 #Preview {
     Login(university:"USP")
 }
+
+/*
+ ProgressView(value: progress)
+     .progressViewStyle(CircularProgressViewStyle())
+     .scaleEffect(3, anchor: .center)
+ */

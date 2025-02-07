@@ -11,16 +11,24 @@ struct Starter: View {
     
     @Environment(\.horizontalSizeClass) var sizeClass
     
+    @State private var isShowingPopover = false
+    
     var body: some View {
         
         NavigationStack {
             
             ZStack{
                 
-                Image("background")
-                    .resizable()
-                    .scaledToFill()
-                    .ignoresSafeArea()
+                GeometryReader { geometry in
+                    Image("background")
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                        .frame(
+                            maxWidth: geometry.size.width,
+                            maxHeight: geometry.size.height
+                        )
+                }
                 
                 VStack{
                     
@@ -28,19 +36,19 @@ struct Starter: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 60)
-                        .padding(.top, 10)
                     
                     Spacer()
                     
                     NavigationLink(destination: LoginMenu()) {
                         Text("Entrar")
-                            .padding(.horizontal,100)
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.primaryPurple)
                     .controlSize(.regular)
                     
                 }
+                .frame(maxWidth:500)
                 
                 VStack{
                     
@@ -52,10 +60,14 @@ struct Starter: View {
                 }
                 
             }
-            .safeAreaPadding(sizeClass == .regular ? 60 : 0)
+            .safeAreaPadding(sizeClass == .regular ? 60 : 30)
             
         }
         .tint(Color("Primary_Purple"))
+        
+        .onAppear(){
+            UserDefaults.standard.set(false, forKey: "isWelcomed")
+        }
         
     }
     

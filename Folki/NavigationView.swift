@@ -17,38 +17,38 @@ struct NavigationView: View {
              
         TabView{
             
-            ContentView()
+            LoginMenu()
                 .tabItem {
                     Label("Início",systemImage: "house.fill")
                 }
             
-            ContentView()
+            LoginMenu()
                 .tabItem {
                     Label("Semana",systemImage: "list.bullet")
                 }
             
-            ContentView()
+            LoginMenu()
                 .tabItem {
                     Label("Calendário",systemImage: "calendar")
                         
                 }
             
-            ContentView()
+            LoginMenu()
                 .tabItem {
                     Label("Atividades",systemImage: "bookmark.fill")
                 }
             
-            ContentView()
+            LoginMenu()
                 .tabItem {
                     Label("Faltas",systemImage: "bag.fill")
                 }
             
-            ContentView()
+            LoginMenu()
                 .tabItem {
                     Label("Notas",systemImage: "tray.full.fill")
                 }
             
-            ContentView()
+            LoginMenu()
                 .tabItem {
                     Label("Configurações",systemImage: "gearshape")
                 }
