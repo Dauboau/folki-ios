@@ -30,8 +30,8 @@ struct Login: View {
     
     @State private var showInfo = false
     
-    @State private var user = ""
-    @State private var password = ""
+    @State private var studentRA = ""
+    @State private var studentPassword = ""
     
     @State var progress = 0.2
     var loginTip = LoginTip()
@@ -55,14 +55,14 @@ struct Login: View {
                         .bold()
                         .foregroundColor(.white)
                     
-                    TextField(getLoginString(university: university), text: $user)
+                    TextField(getLoginString(university: university)!, text: $studentRA)
                         .textFieldStyle(.roundedBorder)
                         .padding(.bottom,5)
                     
-                    SecureField("Senha", text: $password)
+                    SecureField("Senha", text: $studentPassword)
                         .textFieldStyle(.roundedBorder)
                     
-                    NavigationLink(destination: Login(university:"A")) {
+                    NavigationLink(destination: NavigationView(studentRA: studentRA, studentPassword: studentPassword, universityId: getUniversityId(university: university)!,loginFlag:true)) {
                         Text("Login")
                             .frame(maxWidth: .infinity)
                     }
@@ -70,7 +70,6 @@ struct Login: View {
                     .tint(.primaryPurple)
                     .controlSize(.regular)
                     .padding(.top,20)
-                    
                     
                 }
                 .padding(.horizontal)
@@ -82,15 +81,28 @@ struct Login: View {
         
     }
     
-    private func getLoginString(university: String) -> String {
+    private func getLoginString(university: String) -> String? {
         
-        switch university {
+        switch university.uppercased() {
             case "USP":
                 return "Número USP"
             case "UFSCAR":
                 return "RA"
             default:
-                return "NULL"
+                return nil
+        }
+        
+    }
+    
+    private func getUniversityId(university: String) -> Int? {
+        
+        switch university.uppercased() {
+            case "USP":
+                return 1
+            case "UFSCAR":
+                return 2
+            default:
+                return nil
         }
         
     }

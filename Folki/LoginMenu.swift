@@ -69,7 +69,7 @@ struct LoginMenu: View {
                         .tabViewStyle(PageTabViewStyle())
                         .presentationDetents([.large])
                         .background(Color.clear)
-                        .ignoresSafeArea(edges: .bottom)
+                        .ignoresSafeArea()
                         .onDisappear(){
                             UserDefaults.standard.set(true, forKey: "isWelcomed")
                         }
@@ -84,7 +84,8 @@ struct LoginMenu: View {
                 }
                 .frame(maxWidth:500)
                 
-            }.navigationBarBackButtonHidden(true)
+            }
+            .navigationBarBackButtonHidden(true)
             
         }
         

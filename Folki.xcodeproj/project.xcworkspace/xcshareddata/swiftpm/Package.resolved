@@ -1,0 +1,15 @@
+{
+  "originHash" : "77297abac32d7204ad915079199bff4ad18a4bceb4a917a26fea0531ec9d0138",
+  "pins" : [
+    {
+      "identity" : "just",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dduan/Just.git",
+      "state" : {
+        "revision" : "1824bf84cf52d11d69ae20cfb89f0ce5bffa5650",
+        "version" : "0.8.0"
+      }
+    }
+  ],
+  "version" : 3
+}
