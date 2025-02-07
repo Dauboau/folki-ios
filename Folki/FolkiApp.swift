@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 @main
 struct FolkiApp: App {
@@ -25,8 +26,20 @@ struct FolkiApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Starter()
         }
         .modelContainer(sharedModelContainer)
     }
+    
+    init() {
+        do {
+            try Tips.configure([
+                .displayFrequency(.hourly)
+            ])
+        }
+        catch {
+            print("Error initializing tips: \(error)")
+        }
+    }
+    
 }
