@@ -15,14 +15,13 @@ struct NavigationView: View {
     @State var studentPassword : String
     @State var universityId : Int
     @State var loginFlag : Bool = false
-    
-    @State var token : String = UserDefaults.standard.string(forKey: "token") ?? ""
+    @State var user : User?
     
     var body: some View {
         
         NavigationStack {
             
-            if token == "" || loginFlag {
+            if UserDefaults.standard.string(forKey: "token") == nil || loginFlag {
                 
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
@@ -37,7 +36,7 @@ struct NavigationView: View {
                                 
                                 UserDefaults.standard.set(loginResponse.token, forKey: "token")
                                 
-                                token = loginResponse.token
+                                loginFlag = false
                                 
                             case .failure(let error):
                                 print("Login failed: \(error.localizedDescription)")
@@ -55,7 +54,7 @@ struct NavigationView: View {
                 
                 TabView{
                     
-                    Home()
+                    Home(user: user)
                         .tabItem {
                             Label("Início",systemImage: "house.fill")
                         }
@@ -94,6 +93,20 @@ struct NavigationView: View {
                 }
                 .tabViewStyle(.automatic)
                 .tint(Color("Primary_Purple"))
+                .onAppear{
+                    
+                    getMe(token: UserDefaults.standard.string(forKey: "token")!) { result in
+                        switch result {
+                        case .success(let getMeResponse):
+                            print("GetMe successful! User: \(getMeResponse.user)")
+                            user = getMeResponse.user
+                        case .failure(let error):
+                            print("GetMe failed: \(error.localizedDescription)")
+                        }
+                        
+                    }
+                    
+                }
                 
             }
             

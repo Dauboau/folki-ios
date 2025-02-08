@@ -9,15 +9,15 @@ import SwiftUI
 
 struct Home: View {
     
-    
+    @State var user : User?
     
     var body: some View {
         
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, \(user?.name ?? "Usuário")!")
         
     }
 }
 
 #Preview {
-    Home()
+    Home(user: User(id: 6681, email: "romanzinidaniel@usp.br", name: "Daniel", instituteId: 32, courseId: 84, isVerified: nil, institute: nil, notificationId: nil, userVersion: nil, university: nil))
 }

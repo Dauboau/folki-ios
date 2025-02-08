@@ -10,12 +10,8 @@ import Just
 
 let url = "https://api.folki.com.br/api"
 
-struct LoginResponse: Decodable {
-    let token: String
-}
-
 func login(uspCode: String, password: String, universityId: Int, completion: @escaping (Result<LoginResponse, Error>) -> Void) {
-    // Create the request body
+    
     let body: [String: Any] = [
         "uspCode": uspCode,
         "password": password,
@@ -38,4 +34,26 @@ func login(uspCode: String, password: String, universityId: Int, completion: @es
             completion(.failure(NSError(domain: "No response", code: 0, userInfo: nil)))
         }
     })
+    
+}
+
+func getMe(token: String, completion: @escaping (Result<GetMeResponse, Error>) -> Void){
+    
+    Just.get(url + "/users/me/", headers: ["Authorization": "Bearer \(token)"], asyncCompletionHandler:  { response in
+        
+        if let jsonStr = response.text {
+            
+            let jsonData = jsonStr.data(using: .utf8)!
+            
+            do {
+                let getMeResponse = try JSONDecoder().decode(GetMeResponse.self, from: jsonData)
+                completion(.success(getMeResponse))
+            } catch {
+                completion(.failure(error))
+            }
+        } else {
+            completion(.failure(NSError(domain: "No response", code: 0, userInfo: nil)))
+        }
+    })
+    
 }
