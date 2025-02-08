@@ -49,26 +49,3 @@ func getMe(token: String) -> User{
     return getMeResponse.user
     
 }
-
-
-
-@MainActor
-class Api : ObservableObject {
-    
-    @Published var user:User = User(id: nil, email: nil, name: nil, instituteId: nil, courseId: nil, isVerified: nil, institute: nil, notificationId: nil, userVersion: nil, university: nil)
-    
-    func getMeApi(token: String){
-            
-        Task.detached{
-            
-            let user = getMe(token:token)
-            
-            await MainActor.run{
-                self.user = user
-            }
-            
-        }
-        
-    }
-    
-}

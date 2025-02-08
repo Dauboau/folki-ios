@@ -6,23 +6,28 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct NavigationView: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     @State var studentRA : String
     @State var studentPassword : String
     @State var universityId : Int
     @State var loginFlag : Bool = false
     
-    @StateObject var data = Api()
+    @State var token : String? = UserDefaults.standard.string(forKey: "token")
+    
+    @Environment(\.modelContext) var context
+    @Query() private var users: [User]
+    var user: User? { users.first }
     
     var body: some View {
         
         NavigationStack {
             
-            if UserDefaults.standard.string(forKey: "token") == nil || loginFlag {
+            if token == nil || loginFlag {
                 
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
@@ -36,6 +41,7 @@ struct NavigationView: View {
                                 print("Login successful! Token: \(loginResponse.token)")
                                 
                                 UserDefaults.standard.set(loginResponse.token, forKey: "token")
+                                token = loginResponse.token
                                 
                                 loginFlag = false
                                 
@@ -43,7 +49,7 @@ struct NavigationView: View {
                                 print("Login failed: \(error.localizedDescription)")
                                 
                                 DispatchQueue.main.async {
-                                    self.presentationMode.wrappedValue.dismiss()
+                                    dismiss()
                                 }
                             }
                             
@@ -51,51 +57,71 @@ struct NavigationView: View {
                         
                     }
                 
-            }else{
+            } else {
                 
-                TabView{
+                TabView {
                     
-                    Home(user: data.user)
+                    Home(user: user ?? Default.user)
                         .tabItem {
-                            Label("Início",systemImage: "house.fill")
+                            Label("Início", systemImage: "house.fill")
                         }
                     
                     LoginMenu()
                         .tabItem {
-                            Label("Semana",systemImage: "list.bullet")
+                            Label("Semana", systemImage: "list.bullet")
                         }
                     
                     LoginMenu()
                         .tabItem {
-                            Label("Calendário",systemImage: "calendar")
-                            
+                            Label("Calendário", systemImage: "calendar")
                         }
                     
                     LoginMenu()
                         .tabItem {
-                            Label("Atividades",systemImage: "bookmark.fill")
+                            Label("Atividades", systemImage: "bookmark.fill")
                         }
                     
                     LoginMenu()
                         .tabItem {
-                            Label("Faltas",systemImage: "bag.fill")
+                            Label("Faltas", systemImage: "bag.fill")
                         }
                     
                     LoginMenu()
                         .tabItem {
-                            Label("Notas",systemImage: "tray.full.fill")
+                            Label("Notas", systemImage: "tray.full.fill")
                         }
                     
                     LoginMenu()
                         .tabItem {
-                            Label("Configurações",systemImage: "gershape")
+                            Label("Configurações", systemImage: "gearshape")
                         }
                     
                 }
                 .tabViewStyle(.automatic)
                 .tint(Color("Primary_Purple"))
-                .onAppear{
-                    data.getMeApi(token: UserDefaults.standard.string(forKey: "token")!)
+                .onAppear {
+                    
+                    Task.detached{
+                        
+                        // Get user data
+                        let userAux = await getMe(token: token!)
+                        
+                        await MainActor.run{
+                            
+                            context.insert(userAux)
+                            
+                            // Save to persist the user
+                            do {
+                                try context.save()
+                                print("User inserted and saved!")
+                            } catch {
+                                print("Error saving context: \(error)")
+                            }
+                            
+                        }
+
+                    }
+                                    
                 }
                 
             }
@@ -109,6 +135,7 @@ struct NavigationView: View {
 
 struct NavigationView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView(studentRA: "12547614", studentPassword: "bymxox-tubTed-1jufpu",universityId:1)
+        NavigationView(studentRA: "12547614", studentPassword: "bymxox-tubTed-1jufpu", universityId: 1)
+            .modelContainer(for:User.self, inMemory: true)
     }
 }

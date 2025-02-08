@@ -35,7 +35,7 @@ struct Home: View {
                     .padding(.bottom,5)
                     
                     HStack{
-                        Text("Outra \(weekDay) na USP!")
+                        Text("Outro/a \(weekDay) na USP!")
                             .foregroundColor(.white)
                         Spacer()
                     }.onAppear(){
@@ -52,6 +52,10 @@ struct Home: View {
                             .foregroundColor(.white)
                         Spacer()
                     }.onChange(of: user){
+                        if let universityId = user.university?.id {
+                            semesterProgress = calculateSemester(universityId: universityId)
+                        }
+                    }.onAppear(){
                         if let universityId = user.university?.id {
                             semesterProgress = calculateSemester(universityId: universityId)
                         }
