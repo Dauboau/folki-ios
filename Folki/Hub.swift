@@ -22,7 +22,7 @@ struct Hub: View {
     var body: some View {
         
         if(user != nil){
-            NavigationView(studentRA: "", studentPassword: "", universityId: 0)
+            NavigationView()
         }else{
             Starter()
         }

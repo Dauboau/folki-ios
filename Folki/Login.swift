@@ -28,8 +28,6 @@ struct Login: View {
     
     @State var university : String
     
-    @State private var showInfo = false
-    
     @State private var studentRA = ""
     @State private var studentPassword = ""
     
@@ -62,7 +60,7 @@ struct Login: View {
                     SecureField("Senha", text: $studentPassword)
                         .textFieldStyle(.roundedBorder)
                     
-                    NavigationLink(destination: NavigationView(studentRA: studentRA, studentPassword: studentPassword, universityId: getUniversityId(university: university)!,loginFlag:true)) {
+                    NavigationLink(destination: LoginHub(studentRA: studentRA, studentPassword: studentPassword, universityId: getUniversityId(university: university)!)) {
                         Text("Login")
                             .frame(maxWidth: .infinity)
                     }
@@ -112,9 +110,3 @@ struct Login: View {
 #Preview {
     Login(university:"USP")
 }
-
-/*
- ProgressView(value: progress)
-     .progressViewStyle(CircularProgressViewStyle())
-     .scaleEffect(3, anchor: .center)
- */
