@@ -15,6 +15,7 @@ struct FolkiApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             User.self,
+            UserSubject.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

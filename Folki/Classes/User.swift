@@ -36,6 +36,11 @@ class User: Decodable,Equatable {
             self.userVersion = userVersion
             self.university = university
     }
+    
+    // Equatable conformance
+    static func ==(lhs: User, rhs: User) -> Bool {
+        return lhs.id == rhs.id
+    }
 
     // Decodable conformance
     enum CodingKeys: String, CodingKey {
@@ -56,6 +61,18 @@ class User: Decodable,Equatable {
             let university = try container.decodeIfPresent(University.self, forKey: .university)
             
             self.init(id: id, email: email, name: name, instituteId: instituteId, courseId: courseId, isVerified: isVerified, institute: institute, notificationId: notificationId, userVersion: userVersion, university: university)
-        }
+    }
+    
+    func update(user : User){
+        self.name = user.name
+        self.email = user.email
+        self.instituteId = user.instituteId
+        self.courseId = user.courseId
+        self.isVerified = user.isVerified
+        self.institute = user.institute
+        self.notificationId = user.notificationId
+        self.userVersion = user.userVersion
+        self.university = user.university
+    }
     
 }

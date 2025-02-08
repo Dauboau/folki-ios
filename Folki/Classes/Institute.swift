@@ -12,7 +12,7 @@ import SwiftData
 class Institute: Decodable,Equatable {
     
     // Properties
-    var id: Int
+    @Attribute(.unique) var id: Int
     var name: String
     var campusId: Int?
     
@@ -21,6 +21,11 @@ class Institute: Decodable,Equatable {
         self.id = id
         self.name = name
         self.campusId = campusId
+    }
+    
+    // Equatable conformance
+    static func ==(lhs: Institute, rhs: Institute) -> Bool {
+        return lhs.id == rhs.id
     }
     
     // Decodable conformance

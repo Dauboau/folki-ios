@@ -14,3 +14,7 @@ struct LoginResponse: Decodable {
 struct GetMeResponse: Decodable {
     let user: User
 }
+
+struct GetUserSubjectsResponse: Decodable {
+    let userSubjects: [UserSubject]
+}

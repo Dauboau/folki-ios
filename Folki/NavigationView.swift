@@ -16,6 +16,8 @@ struct NavigationView: View {
     @Query() private var users: [User]
     var user: User { users.first ?? Default.user }
     
+    @Query(sort: \UserSubject.id) private var userSubjects: [UserSubject]
+    
     var body: some View {
         
         NavigationStack {
@@ -67,9 +69,33 @@ struct NavigationView: View {
                     // Get user data
                     let userAux = getMe(token: token!)
                     
+                    // Get userSubjects
+                    let userSubjectsAux = getUserSubjects(token: token!)
+                
                     await MainActor.run{
                         
-                        context.insert(userAux)
+                        if user == userAux {
+                            user.update(user: userAux)
+                        }else{
+                            context.insert(userAux)
+                        }
+                        
+                        for userSubjectAux in userSubjectsAux {
+                            
+                            var userSubjectFound = false
+                            for userSubject in userSubjects {
+                                if(userSubject == userSubjectAux){
+                                    userSubjectFound = true
+                                    userSubject.update(userSubject: userSubjectAux)
+                                    break
+                                }
+                            }
+                            
+                            if(!userSubjectFound){
+                                context.insert(userSubjectAux)
+                            }
+                            
+                        }
                         
                         // Save to persist the user
                         do {

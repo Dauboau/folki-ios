@@ -49,3 +49,16 @@ func getMe(token: String) -> User{
     return getMeResponse.user
     
 }
+
+func getUserSubjects(token: String) -> [UserSubject]{
+    
+    let response = Just.get(url + "/users/me/subjects", headers: ["Authorization": "Bearer \(token)"])
+    
+    let jsonStr = response.text
+    let jsonData = (jsonStr?.data(using: .utf8)!)!
+    
+    let getUserSubjectsResponse : GetUserSubjectsResponse = try! JSONDecoder().decode(GetUserSubjectsResponse.self, from: jsonData)
+    
+    return getUserSubjectsResponse.userSubjects
+    
+}
