@@ -15,7 +15,8 @@ struct NavigationView: View {
     @State var studentPassword : String
     @State var universityId : Int
     @State var loginFlag : Bool = false
-    @State var user : User?
+    
+    @StateObject var data = Api()
     
     var body: some View {
         
@@ -54,7 +55,7 @@ struct NavigationView: View {
                 
                 TabView{
                     
-                    Home(user: user)
+                    Home(user: data.user)
                         .tabItem {
                             Label("Início",systemImage: "house.fill")
                         }
@@ -87,25 +88,14 @@ struct NavigationView: View {
                     
                     LoginMenu()
                         .tabItem {
-                            Label("Configurações",systemImage: "gearshape")
+                            Label("Configurações",systemImage: "gershape")
                         }
                     
                 }
                 .tabViewStyle(.automatic)
                 .tint(Color("Primary_Purple"))
                 .onAppear{
-                    
-                    getMe(token: UserDefaults.standard.string(forKey: "token")!) { result in
-                        switch result {
-                        case .success(let getMeResponse):
-                            print("GetMe successful! User: \(getMeResponse.user)")
-                            user = getMeResponse.user
-                        case .failure(let error):
-                            print("GetMe failed: \(error.localizedDescription)")
-                        }
-                        
-                    }
-                    
+                    data.getMeApi(token: UserDefaults.standard.string(forKey: "token")!)
                 }
                 
             }

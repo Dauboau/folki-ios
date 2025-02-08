@@ -48,7 +48,7 @@ struct Starter: View {
                     .controlSize(.regular)
                     
                 }
-                .frame(maxWidth:500)
+                .frame(maxWidth:CSS.maxWidth)
                 
                 VStack{
                     

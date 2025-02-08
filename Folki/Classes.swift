@@ -15,7 +15,7 @@ struct GetMeResponse: Decodable {
     let user: User
 }
 
-struct User: Decodable {
+struct User: Decodable,Equatable {
     var id: Int?
     var email: String?
     var name: String?
@@ -28,13 +28,13 @@ struct User: Decodable {
     var university: University?
 }
 
-struct Institute: Decodable {
+struct Institute: Decodable,Equatable {
     var id: Int
     var name: String
     var campusId: Int?
 }
 
-struct University: Decodable {
+struct University: Decodable,Equatable {
     var id: Int
     var name: String
     var slug: String

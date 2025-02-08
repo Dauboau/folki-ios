@@ -37,23 +37,38 @@ func login(uspCode: String, password: String, universityId: Int, completion: @es
     
 }
 
-func getMe(token: String, completion: @escaping (Result<GetMeResponse, Error>) -> Void){
+func getMe(token: String) -> User{
     
-    Just.get(url + "/users/me/", headers: ["Authorization": "Bearer \(token)"], asyncCompletionHandler:  { response in
-        
-        if let jsonStr = response.text {
+    let response = Just.get(url + "/users/me/", headers: ["Authorization": "Bearer \(token)"])
+    
+    let jsonStr = response.text
+    let jsonData = (jsonStr?.data(using: .utf8)!)!
+    
+    let getMeResponse : GetMeResponse = try! JSONDecoder().decode(GetMeResponse.self, from: jsonData)
+    
+    return getMeResponse.user
+    
+}
+
+
+
+@MainActor
+class Api : ObservableObject {
+    
+    @Published var user:User = User(id: nil, email: nil, name: nil, instituteId: nil, courseId: nil, isVerified: nil, institute: nil, notificationId: nil, userVersion: nil, university: nil)
+    
+    func getMeApi(token: String){
             
-            let jsonData = jsonStr.data(using: .utf8)!
+        Task.detached{
             
-            do {
-                let getMeResponse = try JSONDecoder().decode(GetMeResponse.self, from: jsonData)
-                completion(.success(getMeResponse))
-            } catch {
-                completion(.failure(error))
+            let user = getMe(token:token)
+            
+            await MainActor.run{
+                self.user = user
             }
-        } else {
-            completion(.failure(NSError(domain: "No response", code: 0, userInfo: nil)))
+            
         }
-    })
+        
+    }
     
 }

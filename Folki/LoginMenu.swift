@@ -82,7 +82,7 @@ struct LoginMenu: View {
                     }
                     
                 }
-                .frame(maxWidth:500)
+                .frame(maxWidth:CSS.maxWidth)
                 
             }
             .navigationBarBackButtonHidden(true)

@@ -73,7 +73,7 @@ struct Login: View {
                     
                 }
                 .padding(.horizontal)
-                .frame(maxWidth:500)
+                .frame(maxWidth:CSS.maxWidth)
                 
             }
             
