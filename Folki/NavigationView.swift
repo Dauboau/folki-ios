@@ -65,23 +65,30 @@ struct NavigationView: View {
             .tint(Color("Primary_Purple"))
             .onAppear {
                 
-                Task.detached{
+                Task.detached(){
                     
                     // Get user data
                     let userAux = getMe(token: token!)
                     
                     // Get userSubjects
                     let userSubjectsAux = getUserSubjects(token: token!)
+                    
+                    if(
+                        userAux == nil
+                        || userSubjectsAux == nil
+                    ){
+                        return
+                    }
                 
                     await MainActor.run{
                         
                         if user == userAux {
-                            user.update(user: userAux)
+                            user.update(user: userAux!)
                         }else{
-                            context.insert(userAux)
+                            context.insert(userAux!)
                         }
                         
-                        for userSubjectAux in userSubjectsAux {
+                        for userSubjectAux in userSubjectsAux! {
                             
                             var userSubjectFound = false
                             for userSubject in userSubjects {

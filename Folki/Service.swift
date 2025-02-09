@@ -37,28 +37,58 @@ func login(uspCode: String, password: String, universityId: Int, completion: @es
     
 }
 
-func getMe(token: String) -> User{
+func getMe(token: String) -> User?{
     
-    let response = Just.get(url + "/users/me/", headers: ["Authorization": "Bearer \(token)"])
-    
-    let jsonStr = response.text
-    let jsonData = (jsonStr?.data(using: .utf8)!)!
-    
-    let getMeResponse : GetMeResponse = try! JSONDecoder().decode(GetMeResponse.self, from: jsonData)
-    
-    return getMeResponse.user
+    do {
+        
+        let response = Just.get(url + "/users/me/", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let getMeResponse: GetMeResponse = try JSONDecoder().decode(GetMeResponse.self, from: jsonData)
+        
+        return getMeResponse.user
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
     
 }
 
-func getUserSubjects(token: String) -> [UserSubject]{
+func getUserSubjects(token: String) -> [UserSubject]? {
     
-    let response = Just.get(url + "/users/me/subjects", headers: ["Authorization": "Bearer \(token)"])
-    
-    let jsonStr = response.text
-    let jsonData = (jsonStr?.data(using: .utf8)!)!
-    
-    let getUserSubjectsResponse : GetUserSubjectsResponse = try! JSONDecoder().decode(GetUserSubjectsResponse.self, from: jsonData)
-    
-    return getUserSubjectsResponse.userSubjects
-    
+    do {
+        let response = Just.get(url + "/users/me/subjects", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let getUserSubjectsResponse: GetUserSubjectsResponse = try JSONDecoder().decode(GetUserSubjectsResponse.self, from: jsonData)
+        
+        return getUserSubjectsResponse.userSubjects
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
 }
