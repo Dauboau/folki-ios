@@ -10,6 +10,8 @@ import Foundation
 struct CSS {
     
     static let maxWidth:CGFloat = 500
+    static let paddingBottomText:CGFloat = 5
+    static let cornerRadius:CGFloat = 10
     
 }
 

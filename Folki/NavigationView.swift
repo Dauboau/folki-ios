@@ -12,6 +12,8 @@ struct NavigationView: View {
     
     let token : String? = UserDefaults.standard.string(forKey: "token")
     
+    //@State private var customization: TabViewCustomization
+    
     @Environment(\.modelContext) var context
     @Query() private var users: [User]
     var user: User { users.first ?? Default.user }
@@ -44,7 +46,7 @@ struct NavigationView: View {
                         Label("Atividades", systemImage: "bookmark.fill")
                     }
                 
-                LoginMenu()
+                Faltas(userSubjects: userSubjects)
                     .tabItem {
                         Label("Faltas", systemImage: "bag.fill")
                     }
@@ -60,7 +62,6 @@ struct NavigationView: View {
                     }
                 
             }
-            .tabViewStyle(.automatic)
             .tint(Color("Primary_Purple"))
             .onAppear {
                 

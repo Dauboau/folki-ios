@@ -32,7 +32,7 @@ struct Home: View {
                             .foregroundColor(.white)
                         Spacer()
                     }
-                    .padding(.bottom,5)
+                    .padding(.bottom,CSS.paddingBottomText)
                     
                     HStack{
                         Text("Outro/a \(weekDay) na USP!")
@@ -45,7 +45,7 @@ struct Home: View {
                         dateFormatter.dateFormat = "EEEE"
                         weekDay = dateFormatter.string(from: date)
                     }
-                    .padding(.bottom,5)
+                    .padding(.bottom,CSS.paddingBottomText)
                     
                     HStack{
                         Text("\(semesterProgress)% do Semestre Concluído. Vamos lá!")

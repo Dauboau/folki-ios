@@ -28,6 +28,11 @@ class UserSubject: Decodable, Equatable {
         self.color = color
         self.observation = observation
     }
+    
+    // Equatable conformance
+    static func ==(lhs: UserSubject, rhs: UserSubject) -> Bool {
+        return lhs.id == rhs.id
+    }
 
     // Decodable conformance
     enum CodingKeys: String, CodingKey {
@@ -73,6 +78,11 @@ class Subject: Decodable, Equatable {
         self.content = content
         self.driveItemsNumber = driveItemsNumber
     }
+    
+    // Equatable conformance
+    static func ==(lhs: Subject, rhs: Subject) -> Bool {
+        return lhs.id == rhs.id
+    }
 
     // Decodable conformance
     enum CodingKeys: String, CodingKey {
@@ -96,7 +106,7 @@ class SubjectClass: Decodable, Equatable {
     
     // Properties
     @Attribute(.unique) var id: Int
-    var availableDays: [AvailableDay]
+    @Relationship(deleteRule: .cascade, inverse: \AvailableDay.parent) var availableDays: [AvailableDay]
     var subject: Subject
 
     // Initializer
@@ -104,6 +114,17 @@ class SubjectClass: Decodable, Equatable {
         self.id = id
         self.availableDays = availableDays
         self.subject = subject
+        
+        // Configure the inverse relationship
+        for availableDay in self.availableDays {
+            availableDay.parent = self
+        }
+        
+    }
+    
+    // Equatable conformance
+    static func ==(lhs: SubjectClass, rhs: SubjectClass) -> Bool {
+        return lhs.id == rhs.id
     }
 
     // Decodable conformance
@@ -125,13 +146,15 @@ class SubjectClass: Decodable, Equatable {
 class AvailableDay: Decodable, Equatable {
     
     // Properties
-    @Attribute(.unique) var day: String
+    var day: String
     var start: String
     var end: String
     var classRoom: String?
+    
+    var parent: SubjectClass?
 
     // Initializer
-    init(day: String, start: String, end: String, classRoom: String? = nil) {
+    init(day: String, start: String, end: String, classRoom: String? = nil, parent: SubjectClass? = nil) {
         self.day = day
         self.start = start
         self.end = end
