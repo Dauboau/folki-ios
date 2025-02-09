@@ -20,48 +20,56 @@ struct NavigationView: View {
     
     @Query(sort: \UserSubject.id) private var userSubjects: [UserSubject]
     
+    // Tab View
+    @AppStorage("customization") private var customization: TabViewCustomization = TabViewCustomization()
+    init() {
+        UITabBar.appearance().barStyle = .black
+    }
+    
     var body: some View {
         
         NavigationStack {
                 
             TabView {
                 
-                Home(user: user)
-                    .tabItem {
-                        Label("Início", systemImage: "house.fill")
-                    }
+                Tab("Início", systemImage: "house.fill") {
+                    Home(user: user)
+                }
+                .customizationID("com.myApp.home")
                 
-                LoginMenu()
-                    .tabItem {
-                        Label("Semana", systemImage: "list.bullet")
-                    }
+                Tab("Semana", systemImage: "list.bullet") {
+                    LoginMenu()
+                }
+                .customizationID("com.myApp.week")
                 
-                LoginMenu()
-                    .tabItem {
-                        Label("Calendário", systemImage: "calendar")
-                    }
+                Tab("Calendário", systemImage: "calendar") {
+                    LoginMenu()
+                }
+                .customizationID("com.myApp.calendar")
                 
-                LoginMenu()
-                    .tabItem {
-                        Label("Atividades", systemImage: "bookmark.fill")
-                    }
+                Tab("Atividades", systemImage: "bookmark.fill") {
+                    LoginMenu()
+                }
+                .customizationID("com.myApp.activities")
                 
-                Faltas(userSubjects: userSubjects)
-                    .tabItem {
-                        Label("Faltas", systemImage: "bag.fill")
-                    }
+                Tab("Faltas", systemImage: "bag.fill") {
+                    Faltas(userSubjects: userSubjects)
+                }
+                .customizationID("com.myApp.absences")
                 
-                LoginMenu()
-                    .tabItem {
-                        Label("Notas", systemImage: "tray.full.fill")
-                    }
+                Tab("Notas", systemImage: "tray.full.fill") {
+                    LoginMenu()
+                }
+                .customizationID("com.myApp.grades")
                 
-                LoginMenu()
-                    .tabItem {
-                        Label("Configurações", systemImage: "gearshape")
-                    }
+                Tab("Configurações", systemImage: "gearshape") {
+                    LoginMenu()
+                }
+                .customizationID("com.myApp.settings")
                 
             }
+            .tabViewStyle(.sidebarAdaptable)
+            .tabViewCustomization($customization)
             .tint(Color("Primary_Purple"))
             .onAppear {
                 
