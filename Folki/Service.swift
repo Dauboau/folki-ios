@@ -92,3 +92,31 @@ func getUserSubjects(token: String) -> [UserSubject]? {
         return nil
     }
 }
+
+func getUserActivities(token: String) -> [Activity]? {
+    
+    do {
+        let response = Just.get(url + "/users/me/subjects", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let getUserActivitiesResponse: GetUserActivitiesResponse = try JSONDecoder().decode(GetUserActivitiesResponse.self, from: jsonData)
+        
+        return getUserActivitiesResponse.activities
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}

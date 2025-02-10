@@ -18,3 +18,7 @@ struct GetMeResponse: Decodable {
 struct GetUserSubjectsResponse: Decodable {
     let userSubjects: [UserSubject]
 }
+
+struct GetUserActivitiesResponse: Decodable {
+    let activities: [Activity]
+}

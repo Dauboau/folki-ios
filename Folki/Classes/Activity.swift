@@ -1,0 +1,99 @@
+//
+//  Activity.swift
+//  Folki
+//
+//  Created by Daniel Contente Romanzini on 10/02/25.
+//
+
+import Foundation
+import SwiftData
+
+@Model
+class Activity: Decodable, Equatable {
+
+    // Properties
+    @Attribute(.unique) var id: Int
+    var name: String
+    var activityDescription: String
+    var value: Double
+    var userValue: Double
+    var completed: Bool
+    var subjectId: Int
+    var finishDate: String
+    var type: String
+    var subjectClass: SubjectClass?
+    var checked: Bool?
+    var ignored: Bool?
+    var isPrivate: Bool?
+    var deletedAt: String?
+
+    // Initializer
+    init(id: Int, name: String, activityDescription: String, value: Double, userValue: Double, completed: Bool, subjectId: Int, finishDate: String, type: String, subjectClass: SubjectClass? = nil, checked: Bool? = nil, ignored: Bool? = nil, isPrivate: Bool? = nil, deletedAt: String? = nil) {
+        self.id = id
+        self.name = name
+        self.activityDescription = activityDescription
+        self.value = value
+        self.userValue = userValue
+        self.completed = completed
+        self.subjectId = subjectId
+        self.finishDate = finishDate
+        self.type = type
+        self.subjectClass = subjectClass
+        self.checked = checked
+        self.ignored = ignored
+        self.isPrivate = isPrivate
+        self.deletedAt = deletedAt
+    }
+
+    // Equatable conformance
+    static func ==(lhs: Activity, rhs: Activity) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    // Decodable conformance
+    enum CodingKeys: String, CodingKey {
+        case id, name, activityDescription = "description", value, userValue, completed, subjectId, finishDate, type, subjectClass, checked, ignored, isPrivate, deletedAt
+    }
+
+    required convenience init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let id = try container.decode(Int.self, forKey: .id)
+        let name = try container.decode(String.self, forKey: .name)
+        let activityDescription = try container.decode(String.self, forKey: .activityDescription)
+        let value = try container.decode(Double.self, forKey: .value)
+        let userValue = try container.decode(Double.self, forKey: .userValue)
+        let completed = try container.decode(Bool.self, forKey: .completed)
+        let subjectId = try container.decode(Int.self, forKey: .subjectId)
+        let finishDate = try container.decode(String.self, forKey: .finishDate)
+        let type = try container.decode(String.self, forKey: .type)
+        let subjectClass = try container.decodeIfPresent(SubjectClass.self, forKey: .subjectClass)
+        let checked = try container.decodeIfPresent(Bool.self, forKey: .checked)
+        let ignored = try container.decodeIfPresent(Bool.self, forKey: .ignored)
+        let isPrivate = try container.decodeIfPresent(Bool.self, forKey: .isPrivate)
+        let deletedAt = try container.decodeIfPresent(String.self, forKey: .deletedAt)
+
+        self.init(id: id, name: name, activityDescription: activityDescription, value: value, userValue: userValue, completed: completed, subjectId: subjectId, finishDate: finishDate, type: type, subjectClass: subjectClass, checked: checked, ignored: ignored, isPrivate: isPrivate, deletedAt: deletedAt)
+    }
+
+    // Update function
+    func update(activity: Activity) {
+        self.name = activity.name
+        self.activityDescription = activity.activityDescription
+        self.value = activity.value
+        self.userValue = activity.userValue
+        self.completed = activity.completed
+        self.subjectId = activity.subjectId
+        self.finishDate = activity.finishDate
+        self.type = activity.type
+        //self.subjectClass = activity.subjectClass
+        if(self.subjectClass != nil && activity.subjectClass != nil){
+            self.subjectClass?.update(subjectClass: activity.subjectClass!)
+        }else{
+            self.subjectClass = activity.subjectClass
+        }
+        self.checked = activity.checked
+        self.ignored = activity.ignored
+        self.isPrivate = activity.isPrivate
+        self.deletedAt = activity.deletedAt
+    }
+}

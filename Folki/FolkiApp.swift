@@ -16,6 +16,7 @@ struct FolkiApp: App {
         let schema = Schema([
             User.self,
             UserSubject.self,
+            Activity.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

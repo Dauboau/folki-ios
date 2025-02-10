@@ -70,10 +70,11 @@ struct Settings: View {
                         })
                         
                         /**
-                         Deletes all stored user data reseting the app to its initial state
+                         Deletes all stored user data resetting the app to its initial state
                          */
                         SettingButton(buttonText: "Sair", action: {
                             try! context.delete(model: UserSubject.self)
+                            try! context.delete(model: Activity.self)
                             // Deleting the user should be the last action
                             try! context.delete(model: User.self)
                         })

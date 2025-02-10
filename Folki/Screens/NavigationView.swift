@@ -18,7 +18,9 @@ struct NavigationView: View {
     @Query() private var users: [User]
     var user: User { users.first ?? Default.user }
     
-    @Query(sort: \UserSubject.id) private var userSubjects: [UserSubject]
+    @Query(sort: \UserSubject.subjectClass.subject.name) private var userSubjects: [UserSubject]
+    
+    @Query(sort: \Activity.name) private var activities: [Activity]
     
     // Tab View
     @AppStorage("customization") private var customization: TabViewCustomization = TabViewCustomization()
@@ -133,7 +135,7 @@ struct NavigationView: View {
                             
                         }
                         
-                        // Save to persist the user
+                        // Save to persist the user data
                         do {
                             try context.save()
                         } catch {

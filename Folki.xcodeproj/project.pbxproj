@@ -14,9 +14,22 @@
 		6500E1C42D5455A90025C095 /* Folki.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Folki.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		65AD311F2D5ABC8F00A1EE63 /* Exceptions for "Folki" folder in "Folki" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6500E1C32D5455A90025C095 /* Folki */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6500E1C62D5455A90025C095 /* Folki */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				65AD311F2D5ABC8F00A1EE63 /* Exceptions for "Folki" folder in "Folki" target */,
+			);
 			path = Folki;
 			sourceTree = "<group>";
 		};
