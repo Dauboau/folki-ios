@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct CSS {
     
@@ -20,4 +21,14 @@ struct Default {
     
     static let user:User = User(id: 0, email: "estudante@gmail.com", name: "Estudante")
     
+}
+
+struct DefaultBackground: View {
+    
+    static let color = "Gray_1"
+    
+    var body: some View {
+        Color(DefaultBackground.color)
+            .ignoresSafeArea()
+    }
 }

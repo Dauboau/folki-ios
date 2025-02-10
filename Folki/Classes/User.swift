@@ -69,10 +69,20 @@ class User: Decodable,Equatable {
         self.instituteId = user.instituteId
         self.courseId = user.courseId
         self.isVerified = user.isVerified
-        self.institute = user.institute
+        //self.institute = user.institute
+        if(self.institute != nil && user.institute != nil){
+            self.institute?.update(institute: user.institute!)
+        }else{
+            self.institute = user.institute
+        }
         self.notificationId = user.notificationId
         self.userVersion = user.userVersion
-        self.university = user.university
+        //self.university = user.university
+        if(self.university != nil && user.university != nil){
+            self.university?.update(university: user.university!)
+        }else{
+            self.university = user.university
+        }
     }
     
 }

@@ -42,4 +42,9 @@ class University: Decodable,Equatable {
         self.init(id: id, name: name, slug: slug)
     }
     
+    func update(university : University){
+        self.name = university.name
+        self.slug = university.slug
+    }
+    
 }

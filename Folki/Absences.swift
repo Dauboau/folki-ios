@@ -17,8 +17,7 @@ struct Absences: View {
             
             ZStack{
                 
-                Color.gray2
-                    .ignoresSafeArea()
+                DefaultBackground()
                 
                 VStack{
                     
@@ -53,7 +52,7 @@ struct Absences: View {
                             Button("Adicionar Falta",systemImage: "plus.square"){
                                 print("WIP - Adicionar Falta")
                             }
-                            .tint(Color("Gray_3"))
+                            .tint(Color("Gray_2"))
                         }
                                                 
                     }

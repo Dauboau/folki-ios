@@ -24,6 +24,7 @@ struct NavigationView: View {
     @AppStorage("customization") private var customization: TabViewCustomization = TabViewCustomization()
     init() {
         UITabBar.appearance().barStyle = .black
+        UITabBar.appearance().backgroundColor = UIColor(Color(DefaultBackground.color))
     }
     
     var body: some View {
@@ -63,7 +64,7 @@ struct NavigationView: View {
                 .customizationID("com.myApp.grades")
                 
                 Tab("Configurações", systemImage: "gearshape") {
-                    LoginMenu()
+                    Settings()
                 }
                 .customizationID("com.myApp.settings")
                 
@@ -96,12 +97,13 @@ struct NavigationView: View {
                             context.insert(userAux!)
                         }
                         
+                        // Inserting and Updating
                         for userSubjectAux in userSubjectsAux! {
                             
                             var userSubjectFound = false
                             for userSubject in userSubjects {
                                 if(userSubject == userSubjectAux){
-                                    print("\(userSubject.subjectClass.subject.name) updated with \(userSubjectAux.subjectClass.subject.name)")
+                                    print("\(userSubject.subjectClass.subject.name) updated!")
                                     userSubjectFound = true
                                     userSubject.update(userSubject: userSubjectAux)
                                     break

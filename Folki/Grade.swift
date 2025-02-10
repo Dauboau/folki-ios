@@ -18,8 +18,7 @@ struct Grade: View {
             
             ZStack{
                 
-                Color.gray2
-                    .ignoresSafeArea()
+                DefaultBackground()
                 
                 VStack{
                     
@@ -54,7 +53,7 @@ struct Grade: View {
                             Button("Adicionar",systemImage: "plus.square"){
                                 print("WIP - Adicionar Nota")
                             }
-                            .tint(Color("Gray_3"))
+                            .tint(Color("Gray_2"))
                         }
                                                 
                     }

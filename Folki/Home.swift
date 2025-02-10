@@ -20,8 +20,7 @@ struct Home: View {
             
             ZStack{
                 
-                Color.gray2
-                    .ignoresSafeArea()
+                DefaultBackground()
                 
                 VStack{
                     
