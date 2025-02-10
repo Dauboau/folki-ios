@@ -95,28 +95,33 @@ struct NavigationView: View {
                 
                 Task.detached(){
                     
-                    // Get user data
+                    // Get user
                     let userAux = getMe(token: token!)
                     
                     // Get userSubjects
                     let userSubjectsAux = getUserSubjects(token: token!)
                     
+                    // Get activities
+                    let activitiesAux = getUserActivities(token: token!)
+                    
                     if(
                         userAux == nil
                         || userSubjectsAux == nil
+                        || activitiesAux == nil
                     ){
                         return
                     }
                 
                     await MainActor.run{
                         
+                        // Inserting and Updating user
                         if user == userAux {
                             user.update(user: userAux!)
                         }else{
                             context.insert(userAux!)
                         }
                         
-                        // Inserting and Updating
+                        // Inserting and Updating userSubjects
                         for userSubjectAux in userSubjectsAux! {
                             
                             var userSubjectFound = false
@@ -130,7 +135,28 @@ struct NavigationView: View {
                             }
                             
                             if(!userSubjectFound){
+                                print("\(userSubjectAux.subjectClass.subject.name) created!")
                                 context.insert(userSubjectAux)
+                            }
+                            
+                        }
+                        
+                        // Inserting and Updating activities
+                        for activityAux in activitiesAux! {
+                            
+                            var activityFound = false
+                            for activity in activities {
+                                if(activity == activityAux){
+                                    print("\(activity.name) updated!")
+                                    activityFound = true
+                                    activity.update(activity: activityAux)
+                                    break
+                                }
+                            }
+                            
+                            if(!activityFound){
+                                print("\(activityAux.name) created!")
+                                context.insert(activityAux)
                             }
                             
                         }

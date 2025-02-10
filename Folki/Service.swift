@@ -96,7 +96,7 @@ func getUserSubjects(token: String) -> [UserSubject]? {
 func getUserActivities(token: String) -> [Activity]? {
     
     do {
-        let response = Just.get(url + "/users/me/subjects", headers: ["Authorization": "Bearer \(token)"])
+        let response = Just.get(url + "/activities", headers: ["Authorization": "Bearer \(token)"])
         
         guard (200...299).contains(response.statusCode ?? 500) else {
             throw URLError(.badServerResponse)
