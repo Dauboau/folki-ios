@@ -12,7 +12,7 @@ import SwiftData
 class Institute: Decodable,Equatable {
     
     // Properties
-    @Attribute(.unique) var id: Int
+    var id: Int
     var name: String
     var campusId: Int?
     

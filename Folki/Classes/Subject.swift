@@ -64,7 +64,7 @@ class UserSubject: Decodable, Equatable {
 class Subject: Decodable, Equatable {
     
     // Properties
-    @Attribute(.unique) var id: Int
+    var id: Int
     var name: String
     var code: String?
     var content: String?
@@ -113,7 +113,7 @@ class Subject: Decodable, Equatable {
 class SubjectClass: Decodable, Equatable {
     
     // Properties
-    @Attribute(.unique) var id: Int
+    var id: Int
     @Relationship(deleteRule: .cascade, inverse: \AvailableDay.parent) var availableDays: [AvailableDay]
     var subject: Subject
 
