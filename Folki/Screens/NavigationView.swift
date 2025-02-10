@@ -38,16 +38,24 @@ struct NavigationView: View {
                 }
                 .customizationID("com.myApp.home")
                 
-                Tab("Semana", systemImage: "list.bullet") {
-                    LoginMenu()
+                if UIDevice.current.userInterfaceIdiom != .phone {
+                    Tab("Semana", systemImage: "list.bullet") {
+                        LoginMenu()
+                    }
+                    .customizationID("com.myApp.week")
+                    .defaultVisibility(.hidden, for: .tabBar)
+                    
+                    Tab("Calendário", systemImage: "calendar") {
+                        LoginMenu()
+                    }
+                    .customizationID("com.myApp.calendar")
                 }
-                .customizationID("com.myApp.week")
-                .defaultVisibility(.hidden, for: .tabBar)
                 
-                Tab("Calendário", systemImage: "calendar") {
-                    LoginMenu()
+                Tab("Agenda", systemImage: "calendar") {
+                    ScheduleHub(userSubjects: userSubjects)
                 }
-                .customizationID("com.myApp.calendar")
+                .customizationID("com.myApp.schedule")
+                .defaultVisibility(.hidden, for: .automatic)
                 
                 Tab("Atividades", systemImage: "bookmark.fill") {
                     LoginMenu()

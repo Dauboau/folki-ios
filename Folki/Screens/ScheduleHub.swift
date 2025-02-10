@@ -7,60 +7,42 @@
 
 import SwiftUI
 
-struct SubjectsHub: View {
-    
+struct ScheduleHub: View {
+
     let userSubjects : [UserSubject]
+
+    @State private var selectedSegment: String = "Week" // Default
     
-    @State private var selectedSegment: String = "Absences"  // Default to "Absences"
-        
-        var body: some View {
-            NavigationStack {
-                ZStack{
+    var body: some View {
+        NavigationStack {
+            ZStack{
+                
+                DefaultBackground()
+                
+                VStack {
                     
-                    DefaultBackground()
-                    
-                    VStack {
-                        
-                        if selectedSegment == "Absences" {
-                            Absences(userSubjects:userSubjects)
-                        } else {
-                            Grade(userSubjects:userSubjects)
-                        }
-                        
-                        Picker("Select View", selection: $selectedSegment) {
-                            Text("Faltas").tag("Absences")
-                            Text("Notas").tag("Grade")
-                        }
-                        .pickerStyle(SegmentedPickerStyle())  // Use the segmented style
-                        .padding()
-                        .frame(maxWidth:CSS.maxWidth)
-                        
+                    if selectedSegment == "Week" {
+                        Absences(userSubjects:userSubjects)
+                    } else {
+                        Grade(userSubjects:userSubjects)
                     }
+                    
+                    Picker("Select View", selection: $selectedSegment) {
+                        Text("Semana").tag("Week")
+                        Text("Calendário").tag("Calendar")
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding()
+                    .frame(maxWidth:CSS.maxWidth)
+                    
                 }
             }
         }
     }
-
-    struct AbsencesView: View {
-        var body: some View {
-            VStack {
-                Text("Absences Content")
-                // Your Absences content here
-            }
-        }
-    }
-
-    struct GradeView: View {
-        var body: some View {
-            VStack {
-                Text("Grade Content")
-                // Your Grade content here
-            }
-        }
-    }
+}
 
 #Preview {
-    SubjectsHub(userSubjects:
+    ScheduleHub(userSubjects:
         [
             UserSubject(
                 id: 39275,

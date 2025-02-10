@@ -60,12 +60,12 @@ struct Settings: View {
                         })
                         
                         SettingButton(buttonText: "Compartilhar App ;)", action: {
-                            let url = URL(string: "https://folki.com.br")!
-                            let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                            
-                            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                               let rootViewController = windowScene.windows.first?.rootViewController {
-                                rootViewController.present(activityVC, animated: true, completion: nil)
+                            if let url = URL(string: "https://folki.com.br") {
+                                let safariVC = SFSafariViewController(url: url)
+                                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                   let rootViewController = windowScene.windows.first?.rootViewController {
+                                    rootViewController.present(safariVC, animated: true, completion: nil)
+                                }
                             }
                         })
                         
