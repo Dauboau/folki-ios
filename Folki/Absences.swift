@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Faltas: View {
+struct Absences: View {
     
     let userSubjects : [UserSubject]
     
@@ -42,7 +42,7 @@ struct Faltas: View {
                         
                         ForEach(userSubjects) { userSubject in
                             
-                            FaltasCard(subjectName: userSubject.subjectClass.subject.name, nFaltas: userSubject.absences!)
+                            AbsencesCard(userSubject:userSubject)
                             
                         }
                         
@@ -59,7 +59,7 @@ struct Faltas: View {
 }
 
 #Preview {
-    Faltas(userSubjects:
+    Absences(userSubjects:
         [
             UserSubject(
                 id: 39275,
@@ -116,11 +116,10 @@ struct Faltas: View {
     )
 }
 
-fileprivate struct FaltasCard: View {
+fileprivate struct AbsencesCard: View {
     
-    let subjectName: String
-    let nFaltas: Int
-
+    let userSubject : UserSubject
+    
     var body: some View {
         ZStack {
             Color.primaryPurple
@@ -128,14 +127,14 @@ fileprivate struct FaltasCard: View {
 
             VStack {
                 HStack {
-                    Text("\(subjectName)")
+                    Text("\(userSubject.subjectClass.subject.name)")
                         .font(.title2)
                         .bold()
                         .foregroundColor(.white)
                     Spacer()
                 }
                 HStack {
-                    Text(String("\(nFaltas) Faltas Cadastradas"))
+                    Text(String("\(userSubject.absences!) Faltas Cadastradas"))
                         .foregroundColor(.white)
                     Spacer()
                 }

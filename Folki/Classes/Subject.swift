@@ -54,7 +54,7 @@ class UserSubject: Decodable, Equatable {
     func update(userSubject : UserSubject){
         self.absences = userSubject.absences
         self.grading = userSubject.grading
-        self.subjectClass = userSubject.subjectClass
+        self.subjectClass.update(subjectClass: userSubject.subjectClass)
         self.color = userSubject.color
         self.observation = userSubject.observation
     }
@@ -99,6 +99,14 @@ class Subject: Decodable, Equatable {
 
         self.init(id: id, name: name, code: code, content: content, driveItemsNumber: driveItemsNumber)
     }
+    
+    func update(subject: Subject){
+        self.name = subject.name
+        self.code = subject.code
+        self.content = subject.content
+        self.driveItemsNumber = subject.driveItemsNumber
+    }
+    
 }
 
 @Model
@@ -140,6 +148,14 @@ class SubjectClass: Decodable, Equatable {
 
         self.init(id: id, availableDays: availableDays, subject: subject)
     }
+    
+    func update(subjectClass: SubjectClass){
+        self.subject.update(subject: subjectClass.subject)
+        self.availableDays.forEach{ availableDayAux in
+            availableDayAux.update(availableDay: availableDayAux)
+        }
+    }
+    
 }
 
 @Model
@@ -175,4 +191,12 @@ class AvailableDay: Decodable, Equatable {
 
         self.init(day: day, start: start, end: end, classRoom: classRoom)
     }
+    
+    func update(availableDay: AvailableDay){
+        self.day = availableDay.day
+        self.start = availableDay.start
+        self.end = availableDay.end
+        self.classRoom = availableDay.classRoom
+    }
+    
 }

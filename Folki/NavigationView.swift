@@ -53,12 +53,12 @@ struct NavigationView: View {
                 .customizationID("com.myApp.activities")
                 
                 Tab("Faltas", systemImage: "bag.fill") {
-                    Faltas(userSubjects: userSubjects)
+                    Absences(userSubjects: userSubjects)
                 }
                 .customizationID("com.myApp.absences")
                 
                 Tab("Notas", systemImage: "tray.full.fill") {
-                    LoginMenu()
+                    Grade(userSubjects: userSubjects)
                 }
                 .customizationID("com.myApp.grades")
                 
@@ -101,6 +101,7 @@ struct NavigationView: View {
                             var userSubjectFound = false
                             for userSubject in userSubjects {
                                 if(userSubject == userSubjectAux){
+                                    print("\(userSubject.subjectClass.subject.name) updated with \(userSubjectAux.subjectClass.subject.name)")
                                     userSubjectFound = true
                                     userSubject.update(userSubject: userSubjectAux)
                                     break
