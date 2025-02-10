@@ -38,15 +38,28 @@ struct Absences: View {
                     }
                     .padding(.bottom,CSS.paddingBottomText)
                     
-                    ScrollView{
+                    List{
                         
                         ForEach(userSubjects) { userSubject in
                             
                             AbsencesCard(userSubject:userSubject)
                             
                         }
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets())
+                        .padding(.vertical, CSS.paddingVerticalList)
                         
+                        .swipeActions(edge: .leading,allowsFullSwipe: true){
+                            Button("Adicionar Falta",systemImage: "plus.square"){
+                                print("WIP - Adicionar Falta")
+                            }
+                            .tint(Color("Gray_3"))
+                        }
+                                                
                     }
+                    .listStyle(.grouped)
+                    .scrollContentBackground(.hidden)
+                    .contentMargins(.vertical, 0)
                     
                 }
                 .safeAreaPadding()
@@ -124,22 +137,29 @@ fileprivate struct AbsencesCard: View {
         ZStack {
             Color.primaryPurple
                 .cornerRadius(CSS.cornerRadius)
-
-            VStack {
-                HStack {
-                    Text("\(userSubject.subjectClass.subject.name)")
-                        .font(.title2)
-                        .bold()
-                        .foregroundColor(.white)
-                    Spacer()
+            
+            NavigationLink(destination:
+                AbsenceList(userSubject:userSubject)
+            ){
+                VStack {
+                    HStack {
+                        Text("\(userSubject.subjectClass.subject.name)")
+                            .font(.title2)
+                            .bold()
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    HStack {
+                        Text(String("\(userSubject.absences!) Faltas Cadastradas"))
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
                 }
-                HStack {
-                    Text(String("\(userSubject.absences!) Faltas Cadastradas"))
-                        .foregroundColor(.white)
-                    Spacer()
-                }
+                
             }
             .padding()
+            .foregroundStyle(.white)
+            
         }
         .padding(.bottom, CSS.paddingBottomText)
     }

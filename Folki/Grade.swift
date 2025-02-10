@@ -48,11 +48,11 @@ struct Grade: View {
                         }
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets())
-                        .padding(.vertical, CSS.paddingBottomText)
+                        .padding(.vertical, CSS.paddingVerticalList)
                         
                         .swipeActions(edge: .leading,allowsFullSwipe: true){
-                            Button("Adicionar Falta",systemImage: "plus.square"){
-                                print("WIP - Adicionar Falta")
+                            Button("Adicionar",systemImage: "plus.square"){
+                                print("WIP - Adicionar Nota")
                             }
                             .tint(Color("Gray_3"))
                         }
