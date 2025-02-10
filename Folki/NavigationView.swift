@@ -42,6 +42,7 @@ struct NavigationView: View {
                     LoginMenu()
                 }
                 .customizationID("com.myApp.week")
+                .defaultVisibility(.hidden, for: .tabBar)
                 
                 Tab("Calendário", systemImage: "calendar") {
                     LoginMenu()
@@ -53,15 +54,23 @@ struct NavigationView: View {
                 }
                 .customizationID("com.myApp.activities")
                 
-                Tab("Faltas", systemImage: "bag.fill") {
-                    Absences(userSubjects: userSubjects)
+                if UIDevice.current.userInterfaceIdiom != .phone {
+                    Tab("Faltas", systemImage: "bag.fill") {
+                        Absences(userSubjects: userSubjects)
+                    }
+                    .customizationID("com.myApp.absences")
+                    
+                    Tab("Notas", systemImage: "tray.full.fill") {
+                        Grade(userSubjects: userSubjects)
+                    }
+                    .customizationID("com.myApp.grades")
                 }
-                .customizationID("com.myApp.absences")
                 
-                Tab("Notas", systemImage: "tray.full.fill") {
-                    Grade(userSubjects: userSubjects)
+                Tab("Subjects", systemImage: "books.vertical.fill") {
+                    SubjectsHub(userSubjects:userSubjects)
                 }
-                .customizationID("com.myApp.grades")
+                .customizationID("com.myApp.subjects")
+                .defaultVisibility(.hidden, for: .automatic)
                 
                 Tab("Configurações", systemImage: "gearshape") {
                     Settings()

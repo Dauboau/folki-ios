@@ -9,7 +9,6 @@ import SwiftUI
 
 struct Grade: View {
     
-    @Environment(\.modelContext) var context
     let userSubjects : [UserSubject]
     
     var body: some View {

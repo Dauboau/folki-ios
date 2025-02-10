@@ -160,6 +160,5 @@ fileprivate struct AbsencesCard: View {
             .foregroundStyle(.white)
             
         }
-        .padding(.bottom, CSS.paddingBottomText)
     }
 }
