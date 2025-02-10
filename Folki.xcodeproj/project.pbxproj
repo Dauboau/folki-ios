@@ -10,56 +10,14 @@
 		6500E2432D569EC30025C095 /* Just in Frameworks */ = {isa = PBXBuildFile; productRef = 6500E2422D569EC30025C095 /* Just */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		6500E1D72D5455AA0025C095 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6500E1BC2D5455A90025C095 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6500E1C32D5455A90025C095;
-			remoteInfo = Folki;
-		};
-		6500E1E12D5455AA0025C095 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6500E1BC2D5455A90025C095 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6500E1C32D5455A90025C095;
-			remoteInfo = Folki;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		6500E1C42D5455A90025C095 /* Folki.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Folki.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6500E1D62D5455AA0025C095 /* FolkiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FolkiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		6500E1E02D5455AA0025C095 /* FolkiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FolkiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		65AD30DC2D5A85C200A1EE63 /* Exceptions for "Folki" folder in "Folki" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 6500E1C32D5455A90025C095 /* Folki */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6500E1C62D5455A90025C095 /* Folki */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				65AD30DC2D5A85C200A1EE63 /* Exceptions for "Folki" folder in "Folki" target */,
-			);
 			path = Folki;
-			sourceTree = "<group>";
-		};
-		6500E1D92D5455AA0025C095 /* FolkiTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = FolkiTests;
-			sourceTree = "<group>";
-		};
-		6500E1E32D5455AA0025C095 /* FolkiUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = FolkiUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -73,20 +31,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6500E1D32D5455AA0025C095 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6500E1DD2D5455AA0025C095 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -94,8 +38,6 @@
 			isa = PBXGroup;
 			children = (
 				6500E1C62D5455A90025C095 /* Folki */,
-				6500E1D92D5455AA0025C095 /* FolkiTests */,
-				6500E1E32D5455AA0025C095 /* FolkiUITests */,
 				6500E1C52D5455A90025C095 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -104,8 +46,6 @@
 			isa = PBXGroup;
 			children = (
 				6500E1C42D5455A90025C095 /* Folki.app */,
-				6500E1D62D5455AA0025C095 /* FolkiTests.xctest */,
-				6500E1E02D5455AA0025C095 /* FolkiUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -136,52 +76,6 @@
 			productReference = 6500E1C42D5455A90025C095 /* Folki.app */;
 			productType = "com.apple.product-type.application";
 		};
-		6500E1D52D5455AA0025C095 /* FolkiTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6500E1ED2D5455AA0025C095 /* Build configuration list for PBXNativeTarget "FolkiTests" */;
-			buildPhases = (
-				6500E1D22D5455AA0025C095 /* Sources */,
-				6500E1D32D5455AA0025C095 /* Frameworks */,
-				6500E1D42D5455AA0025C095 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6500E1D82D5455AA0025C095 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				6500E1D92D5455AA0025C095 /* FolkiTests */,
-			);
-			name = FolkiTests;
-			packageProductDependencies = (
-			);
-			productName = FolkiTests;
-			productReference = 6500E1D62D5455AA0025C095 /* FolkiTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		6500E1DF2D5455AA0025C095 /* FolkiUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6500E1F02D5455AA0025C095 /* Build configuration list for PBXNativeTarget "FolkiUITests" */;
-			buildPhases = (
-				6500E1DC2D5455AA0025C095 /* Sources */,
-				6500E1DD2D5455AA0025C095 /* Frameworks */,
-				6500E1DE2D5455AA0025C095 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				6500E1E22D5455AA0025C095 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				6500E1E32D5455AA0025C095 /* FolkiUITests */,
-			);
-			name = FolkiUITests;
-			packageProductDependencies = (
-			);
-			productName = FolkiUITests;
-			productReference = 6500E1E02D5455AA0025C095 /* FolkiUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -194,14 +88,6 @@
 				TargetAttributes = {
 					6500E1C32D5455A90025C095 = {
 						CreatedOnToolsVersion = 16.2;
-					};
-					6500E1D52D5455AA0025C095 = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 6500E1C32D5455A90025C095;
-					};
-					6500E1DF2D5455AA0025C095 = {
-						CreatedOnToolsVersion = 16.2;
-						TestTargetID = 6500E1C32D5455A90025C095;
 					};
 				};
 			};
@@ -223,28 +109,12 @@
 			projectRoot = "";
 			targets = (
 				6500E1C32D5455A90025C095 /* Folki */,
-				6500E1D52D5455AA0025C095 /* FolkiTests */,
-				6500E1DF2D5455AA0025C095 /* FolkiUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		6500E1C22D5455A90025C095 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6500E1D42D5455AA0025C095 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6500E1DE2D5455AA0025C095 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -261,34 +131,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		6500E1D22D5455AA0025C095 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6500E1DC2D5455AA0025C095 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		6500E1D82D5455AA0025C095 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6500E1C32D5455A90025C095 /* Folki */;
-			targetProxy = 6500E1D72D5455AA0025C095 /* PBXContainerItemProxy */;
-		};
-		6500E1E22D5455AA0025C095 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6500E1C32D5455A90025C095 /* Folki */;
-			targetProxy = 6500E1E12D5455AA0025C095 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		6500E1E82D5455AA0025C095 /* Debug */ = {
@@ -482,78 +325,6 @@
 			};
 			name = Release;
 		};
-		6500E1EE2D5455AA0025C095 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9433Q5Y497;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = danielContente.FolkiTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Folki.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Folki";
-			};
-			name = Debug;
-		};
-		6500E1EF2D5455AA0025C095 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9433Q5Y497;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = danielContente.FolkiTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Folki.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Folki";
-			};
-			name = Release;
-		};
-		6500E1F12D5455AA0025C095 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9433Q5Y497;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = danielContente.FolkiUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Folki;
-			};
-			name = Debug;
-		};
-		6500E1F22D5455AA0025C095 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9433Q5Y497;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = danielContente.FolkiUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Folki;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -571,24 +342,6 @@
 			buildConfigurations = (
 				6500E1EB2D5455AA0025C095 /* Debug */,
 				6500E1EC2D5455AA0025C095 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6500E1ED2D5455AA0025C095 /* Build configuration list for PBXNativeTarget "FolkiTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6500E1EE2D5455AA0025C095 /* Debug */,
-				6500E1EF2D5455AA0025C095 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6500E1F02D5455AA0025C095 /* Build configuration list for PBXNativeTarget "FolkiUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6500E1F12D5455AA0025C095 /* Debug */,
-				6500E1F22D5455AA0025C095 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
