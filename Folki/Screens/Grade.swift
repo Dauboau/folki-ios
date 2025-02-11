@@ -42,19 +42,18 @@ struct Grade: View {
                         ForEach(userSubjects) { userSubject in
                             
                             GradeCard(userSubject:userSubject)
+                                .swipeActions(edge: .leading,allowsFullSwipe: true){
+                                    Button("Adicionar",systemImage: "plus.square"){
+                                        print("WIP - Adicionar Nota")
+                                    }
+                                    .tint(Color("Gray_2"))
+                                }
                             
                         }
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
                         .padding(.vertical, CSS.paddingVerticalList)
-                        
-                        .swipeActions(edge: .leading,allowsFullSwipe: true){
-                            Button("Adicionar",systemImage: "plus.square"){
-                                print("WIP - Adicionar Nota")
-                            }
-                            .tint(Color("Gray_2"))
-                        }
                                                 
                     }
                     .listStyle(.grouped)

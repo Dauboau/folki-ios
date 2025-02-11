@@ -42,19 +42,18 @@ struct Absences: View {
                         ForEach(userSubjects) { userSubject in
                             
                             AbsencesCard(userSubject:userSubject)
+                                .swipeActions(edge: .leading,allowsFullSwipe: true){
+                                    Button("Adicionar Falta",systemImage: "plus.square"){
+                                        print("WIP - Adicionar Falta")
+                                    }
+                                    .tint(Color("Gray_2"))
+                                }
                             
                         }
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
                         .padding(.vertical, CSS.paddingVerticalList)
-                        
-                        .swipeActions(edge: .leading,allowsFullSwipe: true){
-                            Button("Adicionar Falta",systemImage: "plus.square"){
-                                print("WIP - Adicionar Falta")
-                            }
-                            .tint(Color("Gray_2"))
-                        }
                                                 
                     }
                     .listStyle(.grouped)

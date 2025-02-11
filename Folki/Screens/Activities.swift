@@ -11,8 +11,10 @@ struct Activities: View {
     
     let activities : [Activity]
     
-    @State var expanded1 : Bool = true
-    @State var expanded2 : Bool = true
+    @State var expandedLate : Bool = true
+    @State var expandedDue : Bool = true
+    @State var expandedChecked : Bool = true
+    @State var expandedDeleted : Bool = false
     
     var body: some View {
         
@@ -34,36 +36,36 @@ struct Activities: View {
                     .padding(.bottom,CSS.paddingBottomText)
                     
                     HStack{
-                        Text("Atividades Restantes!")
+                        Text("\(activities.count{$0.checked != true && $0.deletedAt == nil && $0.isLate() == false}) Atividade(s) Restante(s)!")
                             .foregroundColor(.white)
                         Spacer()
                     }
                     .padding(.bottom,CSS.paddingBottomText)
                     
-                    List{
+                    List(){
                         
                         Section(
-                            isExpanded: $expanded1,
+                            isExpanded: $expandedLate,
                             content:{
                             
                                 ForEach(activities.filter { activity in
-                                    activity.isLate() == true
-                                }){ activity in
+                                    return (activity.isLate() == true && activity.checked == false && activity.deletedAt == nil)
+                                },id: \.self){ activity in
                                     
                                     ActivityCard(activity:activity)
+                                        .swipeActions(edge: .leading,allowsFullSwipe: true){
+                                            SwipeCheck(activity: activity)
+                                        }
+                                        .swipeActions(edge: .trailing,allowsFullSwipe: true){
+                                            SwipeDelete(activity: activity)
+                                            SwipeEdit(activity: activity)
+                                        }
                                     
                                 }
                                 .listRowBackground(Color.clear)
                                 .listRowInsets(EdgeInsets())
                                 .listRowSeparator(.hidden)
                                 .padding(.vertical, CSS.paddingVerticalList)
-                                
-                                .swipeActions(edge: .leading,allowsFullSwipe: true){
-                                    Button("Editar",systemImage: "plus.square"){
-                                        print("WIP - Editar Atividade")
-                                    }
-                                    .tint(Color("Gray_2"))
-                                }
                             
                             },
                             header: {
@@ -73,14 +75,21 @@ struct Activities: View {
                         )
                         
                         Section(
-                            isExpanded: $expanded2,
+                            isExpanded: $expandedDue,
                             content:{
                             
                                 ForEach(activities.filter { activity in
-                                    activity.isLate() == false
+                                    return (activity.isLate() == false && activity.checked == false && activity.deletedAt == nil)
                                 }) { activity in
                                     
                                     ActivityCard(activity:activity)
+                                        .swipeActions(edge: .leading,allowsFullSwipe: true){
+                                            SwipeCheck(activity: activity)
+                                        }
+                                        .swipeActions(edge: .trailing,allowsFullSwipe: false){
+                                            SwipeDelete(activity: activity)
+                                            SwipeEdit(activity: activity)
+                                        }
                                     
                                 }
                                 .listRowBackground(Color.clear)
@@ -88,28 +97,68 @@ struct Activities: View {
                                 .listRowSeparator(.hidden)
                                 .padding(.vertical, CSS.paddingVerticalList)
                                 
-                                .swipeActions(edge: .leading,allowsFullSwipe: true){
-                                    Button("Concluir",systemImage: "checkmark.square.fill"){
-                                        print("WIP - Concluir Atividade")
-                                    }
-                                    .tint(Color("Primary_Green"))
-                                }
-                                
-                                .swipeActions(edge: .trailing,allowsFullSwipe: false){
-                                    Button("Excluir",systemImage: "minus.square.fill"){
-                                        print("WIP - Excluir Atividade")
-                                    }
-                                    .tint(Color("Primary_Red"))
-                                    
-                                    Button("Editar",systemImage: "square.and.pencil"){
-                                        print("WIP - Editar Atividade")
-                                    }
-                                    .tint(Color("Primary_Orange"))
-                                }
-                                
                             },
                             header: {
                                 Text("Ainda no prazo")
+                                    .foregroundStyle(.white)
+                            }
+                        )
+                        
+                        Section(
+                            isExpanded: $expandedChecked,
+                            content:{
+                            
+                                ForEach(activities.filter { activity in
+                                    return (activity.checked == true && activity.deletedAt == nil)
+                                }) { activity in
+                                    
+                                    ActivityCard(activity:activity)
+                                        .swipeActions(edge: .leading,allowsFullSwipe: true){
+                                            SwipeUncheck(activity: activity)
+                                        }
+                                        .swipeActions(edge: .trailing,allowsFullSwipe: true){
+                                            SwipeDelete(activity: activity)
+                                            SwipeEdit(activity: activity)
+                                        }
+                                    
+                                }
+                                .listRowBackground(Color.clear)
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(.hidden)
+                                .padding(.vertical, CSS.paddingVerticalList)
+                                
+                            },
+                            header: {
+                                Text("Concluídas")
+                                    .foregroundStyle(.white)
+                            }
+                        )
+                        
+                        Section(
+                            isExpanded: $expandedDeleted,
+                            content:{
+                            
+                                ForEach(activities.filter { activity in
+                                    return (activity.deletedAt != nil)
+                                }) { activity in
+                                    
+                                    ActivityCard(activity:activity)
+                                        .swipeActions(edge: .leading,allowsFullSwipe: true){
+                                            SwipeRestore(activity: activity)
+                                        }
+                                        .swipeActions(edge: .trailing,allowsFullSwipe: true){
+                                            SwipeRestore(activity: activity)
+                                        }
+                                    
+                                }
+                                .listRowBackground(Color.clear)
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(.hidden)
+                                .padding(.vertical, CSS.paddingVerticalList)
+                                
+                            },
+                            header: {
+                                Text("Deletadas")
                                     .foregroundStyle(.white)
                             }
                         )
@@ -121,10 +170,6 @@ struct Activities: View {
                     .listStyle(.sidebar)
                     .scrollContentBackground(.hidden)
                     .contentMargins(.vertical, 0)
-                    
-                    .onDisappear(){
-                        print("Delete Activity Now")
-                    }
                     
                 }
                 .safeAreaPadding()
@@ -139,18 +184,21 @@ struct Activities: View {
 
 #Preview {
     Activities(activities: [
-        Activity(id: 7757, name: "Lição de Multimídia", activityDescription: "", value: 3, subjectClassId: 21074, finishDate: "2025-02-11T15:00:00.000Z", type: "ACTIVITY", subjectClass: SubjectClass(
-            id: 21074,
-            availableDays: [
-                AvailableDay(day: "qua", start: "14:00", end: "17:00")
-            ],
-            subject: Subject(
-                id: 15461,
-                name: "Teste e Inspeção de Software",
-                code: "SCC0261",
-                driveItemsNumber: 0
-            )
-        ))
+        Activity(id: 7757, name: "Lição de Multimídia", activityDescription: "", value: 3, subjectClassId: 21074, finishDate: "2025-02-12T15:00:00.000Z", type: "ACTIVITY",
+            subjectClass: SubjectClass(
+                id: 21074,
+                availableDays: [
+                    AvailableDay(day: "qua", start: "14:00", end: "17:00")
+                ],
+                subject: Subject(
+                    id: 15461,
+                    name: "Teste e Inspeção de Software",
+                    code: "SCC0261",
+                    driveItemsNumber: 0
+                )
+            ),
+        checked:false
+        )
     ])
 }
 
@@ -197,4 +245,90 @@ fileprivate struct ActivityCard: View {
         }
         
     }
+}
+
+fileprivate struct SwipeCheck: View {
+    
+    let activity : Activity
+    
+    var body: some View {
+        
+        Button("Concluir",systemImage: "checkmark.square.fill"){
+            print("WIP - Concluir Atividade")
+        }
+        .tint(Color("Primary_Green"))
+        
+    }
+    
+}
+
+fileprivate struct SwipeEdit: View {
+    
+    let activity : Activity
+    
+    var body: some View {
+        
+        Button("Editar",systemImage: "square.and.pencil"){
+            print("WIP - Editar Atividade")
+        }
+        .tint(Color("Gray_2"))
+        
+    }
+    
+}
+
+fileprivate struct SwipeDelete: View {
+    
+    let activity : Activity
+    
+    var body: some View {
+        
+        Button("Excluir",systemImage: "minus.square.fill"){
+            print("WIP - Excluir Atividade")
+            
+            let isoFormatter = ISO8601DateFormatter()
+            isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+            let currentDate = Date()
+            let currentDateISO = isoFormatter.string(from: currentDate)
+            
+            withAnimation(.snappy) {
+                activity.deletedAt = currentDateISO
+            }
+            
+        }
+        .tint(Color("Primary_Red"))
+        
+    }
+    
+}
+
+fileprivate struct SwipeRestore: View {
+    
+    let activity : Activity
+    
+    var body: some View {
+        
+        Button("Restaurar",systemImage: "arrow.circlepath"){
+            print("WIP - Restaurar Atividade")
+        }
+        .tint(Color("Gray_2"))
+        
+    }
+    
+}
+
+fileprivate struct SwipeUncheck: View {
+    
+    let activity : Activity
+    
+    var body: some View {
+        
+        Button("Desfazer",systemImage: "arrow.uturn.backward.square.fill"){
+            print("WIP - Desfazer Conclusão")
+        }
+        .tint(Color("Gray_2"))
+        
+    }
+    
 }
