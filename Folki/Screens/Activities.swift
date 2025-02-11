@@ -14,7 +14,7 @@ struct Activities: View {
     @State var expandedLate : Bool = true
     @State var expandedDue : Bool = true
     @State var expandedChecked : Bool = true
-    @State var expandedDeleted : Bool = false
+    @State var expandedDeleted : Bool = true
     
     var body: some View {
         
@@ -255,6 +255,10 @@ fileprivate struct SwipeCheck: View {
         
         Button("Concluir",systemImage: "checkmark.square.fill"){
             print("WIP - Concluir Atividade")
+            
+            withAnimation(.snappy) {
+                activity.checked = true
+            }
         }
         .tint(Color("Primary_Green"))
         
@@ -311,6 +315,11 @@ fileprivate struct SwipeRestore: View {
         
         Button("Restaurar",systemImage: "arrow.circlepath"){
             print("WIP - Restaurar Atividade")
+            
+            withAnimation(.snappy) {
+                activity.deletedAt = nil
+            }
+            
         }
         .tint(Color("Gray_2"))
         
@@ -326,6 +335,10 @@ fileprivate struct SwipeUncheck: View {
         
         Button("Desfazer",systemImage: "arrow.uturn.backward.square.fill"){
             print("WIP - Desfazer Conclusão")
+            
+            withAnimation(.snappy) {
+                activity.checked = false
+            }
         }
         .tint(Color("Gray_2"))
         
