@@ -46,7 +46,9 @@ struct Activities: View {
                             isExpanded: $expanded1,
                             content:{
                             
-                                ForEach(activities) { activity in
+                                ForEach(activities.filter { activity in
+                                    activity.isLate() == true
+                                }){ activity in
                                     
                                     ActivityCard(activity:activity)
                                     
@@ -57,8 +59,8 @@ struct Activities: View {
                                 .padding(.vertical, CSS.paddingVerticalList)
                                 
                                 .swipeActions(edge: .leading,allowsFullSwipe: true){
-                                    Button("Adicionar",systemImage: "plus.square"){
-                                        print("WIP - Adicionar Nota")
+                                    Button("Editar",systemImage: "plus.square"){
+                                        print("WIP - Editar Atividade")
                                     }
                                     .tint(Color("Gray_2"))
                                 }
@@ -74,7 +76,9 @@ struct Activities: View {
                             isExpanded: $expanded2,
                             content:{
                             
-                                ForEach(activities) { activity in
+                                ForEach(activities.filter { activity in
+                                    activity.isLate() == false
+                                }) { activity in
                                     
                                     ActivityCard(activity:activity)
                                     
@@ -85,11 +89,24 @@ struct Activities: View {
                                 .padding(.vertical, CSS.paddingVerticalList)
                                 
                                 .swipeActions(edge: .leading,allowsFullSwipe: true){
-                                    Button("Adicionar",systemImage: "plus.square"){
-                                        print("WIP - Adicionar Nota")
+                                    Button("Concluir",systemImage: "checkmark.square.fill"){
+                                        print("WIP - Concluir Atividade")
                                     }
-                                    .tint(Color("Gray_2"))
+                                    .tint(Color("Primary_Green"))
                                 }
+                                
+                                .swipeActions(edge: .trailing,allowsFullSwipe: false){
+                                    Button("Excluir",systemImage: "minus.square.fill"){
+                                        print("WIP - Excluir Atividade")
+                                    }
+                                    .tint(Color("Primary_Red"))
+                                    
+                                    Button("Editar",systemImage: "square.and.pencil"){
+                                        print("WIP - Editar Atividade")
+                                    }
+                                    .tint(Color("Primary_Orange"))
+                                }
+                                
                             },
                             header: {
                                 Text("Ainda no prazo")
@@ -104,6 +121,11 @@ struct Activities: View {
                     .listStyle(.sidebar)
                     .scrollContentBackground(.hidden)
                     .contentMargins(.vertical, 0)
+                    
+                    .onDisappear(){
+                        print("Delete Activity Now")
+                    }
+                    
                 }
                 .safeAreaPadding()
                 
@@ -135,8 +157,6 @@ struct Activities: View {
 fileprivate struct ActivityCard: View {
     
     let activity : Activity
-    
-    @State var finishDate : String = "segunda-feira"
 
     var body: some View {
         
@@ -164,16 +184,9 @@ fileprivate struct ActivityCard: View {
                         }
                     }
                     HStack {
-                        Text(String("\(Int(activity.value) * 10)% da Nota - \(finishDate)"))
+                        Text(String("\(Int(activity.value) * 10)% da Nota - \(DateFormatter.localizedString(from: activity.getDeadlineDate()!, dateStyle: .short, timeStyle: .none))"))
                             .foregroundColor(.white)
                         Spacer()
-                    }
-                    .onAppear(){
-                        let date = Date()
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.locale = Locale(identifier: "pt_BR")
-                        dateFormatter.dateFormat = "EEEE"
-                        finishDate = dateFormatter.string(from: date)
                     }
                 }
                 

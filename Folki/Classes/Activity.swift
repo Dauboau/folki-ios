@@ -88,4 +88,22 @@ class Activity: Decodable, Equatable {
         self.isPrivate = activity.isPrivate
         self.deletedAt = activity.deletedAt
     }
+    
+    func getDeadlineDate() -> Date? {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        return isoFormatter.date(from: self.finishDate)
+    }
+    
+    func isLate() -> Bool {
+
+        if let date = getDeadlineDate() {
+           let today = Date()
+           return date < today
+        }
+
+        return false
+    }
+    
 }
