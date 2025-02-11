@@ -74,7 +74,7 @@ struct Grade: View {
             UserSubject(
                 id: 39275,
                 absences: 0,
-                grading: 4.2,
+                grading: 3.5,
                 subjectClass: SubjectClass(
                     id: 21074,
                     availableDays: [
@@ -91,7 +91,7 @@ struct Grade: View {
             UserSubject(
                 id: 392753,
                 absences: 1,
-                grading: 4.2,
+                grading: 7.2,
                 subjectClass: SubjectClass(
                     id: 21074,
                     availableDays: [
@@ -108,7 +108,7 @@ struct Grade: View {
             UserSubject(
                 id: 391275,
                 absences: 4,
-                grading: 4.2,
+                grading: nil,
                 subjectClass: SubjectClass(
                     id: 21074,
                     availableDays: [
@@ -134,8 +134,20 @@ fileprivate struct GradeCard: View {
         
         ZStack {
             
-            Color.primaryPurple
-                .cornerRadius(CSS.cornerRadius)
+            switch(userSubject.grading){
+                case .none:
+                    Color.primaryPurple
+                        .cornerRadius(CSS.cornerRadius)
+                case let grade where grade! >= 5:
+                    Color.primaryGreen
+                        .cornerRadius(CSS.cornerRadius)
+                case let grade where grade! < 5:
+                    Color.primaryRed
+                        .cornerRadius(CSS.cornerRadius)
+                default:
+                    Color.primaryPurple
+                        .cornerRadius(CSS.cornerRadius)
+            }
 
             NavigationLink(destination:
                 GradeList(userSubject:userSubject)
@@ -148,10 +160,12 @@ fileprivate struct GradeCard: View {
                             .foregroundColor(.white)
                         Spacer()
                     }
-                    HStack {
-                        Text(String("Total de \(userSubject.grading!) de 10.0"))
-                            .foregroundColor(.white)
-                        Spacer()
+                    if(userSubject.grading != nil){
+                        HStack {
+                            Text(String("Total de \(userSubject.grading!) de 10.0"))
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
                     }
                 }
                 

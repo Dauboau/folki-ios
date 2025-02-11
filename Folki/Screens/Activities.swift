@@ -86,7 +86,7 @@ struct Activities: View {
                                         .swipeActions(edge: .leading,allowsFullSwipe: true){
                                             SwipeCheck(activity: activity)
                                         }
-                                        .swipeActions(edge: .trailing,allowsFullSwipe: false){
+                                        .swipeActions(edge: .trailing,allowsFullSwipe: true){
                                             SwipeDelete(activity: activity)
                                             SwipeEdit(activity: activity)
                                         }
