@@ -12,8 +12,6 @@ struct NavigationView: View {
     
     let token : String? = UserDefaults.standard.string(forKey: "token")
     
-    //@State private var customization: TabViewCustomization
-    
     @Environment(\.modelContext) var context
     @Query() private var users: [User]
     var user: User { users.first ?? Default.user }
@@ -45,7 +43,7 @@ struct NavigationView: View {
                         LoginMenu()
                     }
                     .customizationID("com.myApp.week")
-                    .defaultVisibility(.hidden, for: .tabBar)
+                    .defaultVisibility(.hidden, for: .automatic)
                     
                     Tab("Calendário", systemImage: "calendar") {
                         LoginMenu()
@@ -60,7 +58,7 @@ struct NavigationView: View {
                 .defaultVisibility(.hidden, for: .automatic)
                 
                 Tab("Atividades", systemImage: "bookmark.fill") {
-                    LoginMenu()
+                    Activities(activities: activities)
                 }
                 .customizationID("com.myApp.activities")
                 
