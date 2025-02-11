@@ -53,7 +53,7 @@ struct NavigationView: View {
                     .customizationID("com.myApp.calendar")
                 }
                 
-                Tab("Agenda", systemImage: "calendar") {
+                Tab("Agenda", systemImage: "calendar.badge.clock") {
                     ScheduleHub(userSubjects: userSubjects)
                 }
                 .customizationID("com.myApp.schedule")

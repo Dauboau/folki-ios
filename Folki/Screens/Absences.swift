@@ -46,6 +46,7 @@ struct Absences: View {
                         }
                         .listRowBackground(Color.clear)
                         .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
                         .padding(.vertical, CSS.paddingVerticalList)
                         
                         .swipeActions(edge: .leading,allowsFullSwipe: true){
