@@ -210,7 +210,7 @@ fileprivate struct ActivityCard: View {
         
         ZStack {
             
-            Color.primaryPurple
+            activity.getColor()
                 .cornerRadius(CSS.cornerRadius)
 
             NavigationLink(destination:

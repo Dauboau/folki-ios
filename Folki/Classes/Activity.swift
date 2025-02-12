@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUICore
 
 @Model
 class Activity: Decodable, Equatable {
@@ -15,7 +16,7 @@ class Activity: Decodable, Equatable {
     @Attribute(.unique) var id: Int
     var name: String
     var activityDescription: String
-    var value: Double
+    var value: Float
     var subjectClassId: Int
     var finishDate: String
     var type: String
@@ -26,7 +27,7 @@ class Activity: Decodable, Equatable {
     var deletedAt: String?
 
     // Initializer
-    init(id: Int, name: String, activityDescription: String, value: Double, subjectClassId: Int, finishDate: String, type: String, subjectClass: SubjectClass? = nil, checked: Bool? = nil, ignored: Bool? = nil, isPrivate: Bool? = nil, deletedAt: String? = nil) {
+    init(id: Int, name: String, activityDescription: String, value: Float, subjectClassId: Int, finishDate: String, type: String, subjectClass: SubjectClass? = nil, checked: Bool? = nil, ignored: Bool? = nil, isPrivate: Bool? = nil, deletedAt: String? = nil) {
         self.id = id
         self.name = name
         self.activityDescription = activityDescription
@@ -56,7 +57,7 @@ class Activity: Decodable, Equatable {
         let id = try container.decode(Int.self, forKey: .id)
         let name = try container.decode(String.self, forKey: .name)
         let activityDescription = try container.decode(String.self, forKey: .activityDescription)
-        let value = try container.decode(Double.self, forKey: .value)
+        let value = try container.decode(Float.self, forKey: .value)
         let subjectClassId = try container.decode(Int.self, forKey: .subjectClassId)
         let finishDate = try container.decode(String.self, forKey: .finishDate)
         let type = try container.decode(String.self, forKey: .type)
@@ -104,6 +105,26 @@ class Activity: Decodable, Equatable {
         }
 
         return false
+    }
+    
+    /**
+    Get  the activity's color based on on the type of the activity
+     */
+    func getColor() -> Color {
+        
+        switch (self.type) {
+            case "EXAM":
+            return Color.secondaryGreen;
+            case "HOMEWORK":
+                return Color.secondaryYellow;
+            case "ACTIVITY":
+            return Color.secondaryBlue;
+            case "LIST":
+            return Color.secondaryDarkBlue;
+            default:
+                return Color.primaryPurple;
+        }
+        
     }
     
 }

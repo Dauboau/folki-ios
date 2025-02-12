@@ -32,3 +32,4 @@ struct DefaultBackground: View {
             .ignoresSafeArea()
     }
 }
+
