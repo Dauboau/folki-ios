@@ -128,7 +128,7 @@ struct Absences: View {
     )
 }
 
-fileprivate struct AbsencesCard: View {
+struct AbsencesCard: View {
     
     let userSubject : UserSubject
     

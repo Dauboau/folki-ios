@@ -202,7 +202,7 @@ struct Activities: View {
     ])
 }
 
-fileprivate struct ActivityCard: View {
+struct ActivityCard: View {
     
     let activity : Activity
 

@@ -34,7 +34,7 @@ struct NavigationView: View {
             TabView {
                 
                 Tab("Início", systemImage: "house.fill") {
-                    Home(user: user)
+                    Home(user: user, activities: activities, userSubjects: userSubjects)
                 }
                 .customizationID("com.myApp.home")
                 

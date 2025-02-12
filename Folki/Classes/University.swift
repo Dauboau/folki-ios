@@ -16,6 +16,14 @@ class University: Decodable,Equatable {
     var name: String
     var slug: String
     
+    // Static
+    static let Dates: [Int: [Date]] = [
+        1: [Calendar.current.date(from: DateComponents(year: 2024, month: 8, day: 5))!,
+            Calendar.current.date(from: DateComponents(year: 2024, month: 12, day: 12))!],
+        2: [Calendar.current.date(from: DateComponents(year: 2024, month: 10, day: 14))!,
+            Calendar.current.date(from: DateComponents(year: 2025, month: 2, day: 7))!]
+    ]
+    
     // Initializer
     init(id: Int, name: String, slug: String) {
         self.id = id
@@ -45,6 +53,22 @@ class University: Decodable,Equatable {
     func update(university : University){
         self.name = university.name
         self.slug = university.slug
+    }
+    
+    func calculateSemester() -> Int {
+        let today = Date()
+        guard let dates = University.Dates[self.id] else {
+            return 0
+        }
+        
+        let start = dates[0]
+        let end = dates[1]
+        
+        let total = end.timeIntervalSince(start)
+        let current = today.timeIntervalSince(start)
+        
+        let percentage = (current / total) * 100
+        return Int(min(max(floor(percentage), 0), 100))
     }
     
 }
