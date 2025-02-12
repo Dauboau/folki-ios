@@ -80,7 +80,7 @@ struct NavigationView: View {
                 .customizationID("com.myApp.subjects")
                 .defaultVisibility(.hidden, for: .automatic)
                 
-                Tab("Configurações", systemImage: "gearshape") {
+                Tab("Configurações", systemImage: "gearshape.fill") {
                     Settings()
                 }
                 .customizationID("com.myApp.settings")
