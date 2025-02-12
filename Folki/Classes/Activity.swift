@@ -100,8 +100,36 @@ class Activity: Decodable, Equatable {
     func isLate() -> Bool {
 
         if let date = getDeadlineDate() {
-           let today = Date()
-           return date < today
+            let today = Date()
+            let calendar = Calendar.current
+            
+            if(calendar.compare(date,to: today,toGranularity: .dayOfYear) == .orderedAscending){
+               return true
+            }else{
+                return false
+            }
+ 
+        }
+
+        return false
+    }
+    
+    func isDueToday() -> Bool {
+
+        if let date = getDeadlineDate() {
+            let calendar = Calendar.current
+            return calendar.isDateInToday(date)
+        }
+
+        return false
+    }
+    
+    func isDueThisWeek() -> Bool {
+        
+        if let date = getDeadlineDate() {
+            let today = Date()
+            let calendar = Calendar.current
+            return calendar.isDate(date,equalTo: today,toGranularity: .weekOfYear)
         }
 
         return false

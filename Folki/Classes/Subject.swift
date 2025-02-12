@@ -156,10 +156,43 @@ class SubjectClass: Decodable, Equatable {
         }
     }
     
+    func isToday() -> Bool {
+        
+        let calendar = Calendar.current
+        
+        for availableDay in self.availableDays {
+            let nextLesson = availableDay.getNextDate()
+            
+            if(calendar.isDateInToday(nextLesson)){
+                return true
+            }
+        }
+
+        return false
+        
+    }
+    
+    func getNextAvailableDay() -> AvailableDay? {
+        
+        let calendar = Calendar.current
+        
+        let sortedNextAvailableDays = self.availableDays.sorted {
+            (day1,day2) in
+            
+            let nextLesson1 = day1.getNextDate()
+            let nextLesson2 = day2.getNextDate()
+            
+            return calendar.compare(nextLesson1, to: nextLesson2, toGranularity: .day) == .orderedAscending
+        }
+        
+        return sortedNextAvailableDays.first
+        
+    }
+    
 }
 
 @Model
-class AvailableDay: Decodable, Equatable {
+class AvailableDay: Decodable, Equatable, Comparable {
     
     // Properties
     var day: String
@@ -168,6 +201,11 @@ class AvailableDay: Decodable, Equatable {
     var classRoom: String?
     
     var parent: SubjectClass?
+    
+    // Static
+    static let Weekday: [String: Int] = [
+        "dom": 1, "seg": 2, "ter": 3, "qua": 4, "qui": 5, "sex": 6, "sab": 7
+    ]
 
     // Initializer
     init(day: String, start: String, end: String, classRoom: String? = nil, parent: SubjectClass? = nil) {
@@ -180,6 +218,13 @@ class AvailableDay: Decodable, Equatable {
     // Decodable conformance
     enum CodingKeys: String, CodingKey {
         case day, start, end, classRoom
+    }
+    
+    // Comparable conformance
+    static func < (lhs: AvailableDay, rhs: AvailableDay) -> Bool {
+        let lhsDate = lhs.getNextDate()
+        let rhsDate = rhs.getNextDate()
+        return lhsDate < rhsDate
     }
 
     required convenience init(from decoder: Decoder) throws {
@@ -197,6 +242,14 @@ class AvailableDay: Decodable, Equatable {
         self.start = availableDay.start
         self.end = availableDay.end
         self.classRoom = availableDay.classRoom
+    }
+    
+    /**
+     Returns the next Date for the AvailableDay weekday
+     */
+    func getNextDate() -> Date {
+        let today = Date()
+        return today.getNextWeekday(AvailableDay.Weekday[self.day, default: 1])
     }
     
 }

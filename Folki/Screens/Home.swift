@@ -77,7 +77,10 @@ struct Home: View {
                                 Spacer()
                             }
                             
-                            ForEach(activities) { activity in
+                            ForEach(activities.filter{
+                                activity in
+                                return activity.isDueToday()
+                            }) { activity in
                                 
                                 ActivityCard(activity: activity)
                                 
@@ -85,7 +88,7 @@ struct Home: View {
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets())
                             .listRowSeparator(.hidden)
-                            .padding(.vertical, CSS.paddingVerticalList)
+                            .padding(.vertical, CSS.paddingVerticalScrollView)
                             
                         }
                         .padding()
@@ -103,15 +106,18 @@ struct Home: View {
                                 Spacer()
                             }
                             
-                            ForEach(userSubjects) { userSubject in
+                            ForEach(userSubjects.filter{
+                                userSubject in
+                                return userSubject.subjectClass.isToday()
+                            }) { userSubject in
                                 
-                                AbsencesCard(userSubject:userSubject)
+                                WeekCard(userSubject:userSubject)
                                 
                             }
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets())
                             .listRowSeparator(.hidden)
-                            .padding(.vertical, CSS.paddingVerticalList)
+                            .padding(.vertical, CSS.paddingVerticalScrollView)
                             
                         }
                         .padding()
@@ -122,14 +128,17 @@ struct Home: View {
                         VStack{
                             
                             HStack{
-                                Text("Aulas de Hoje")
+                                Text("Atividades da Semana")
                                     .foregroundColor(.white)
                                     .font(.title2)
                                     .bold()
                                 Spacer()
                             }
                             
-                            ForEach(activities) { activity in
+                            ForEach(activities.filter{
+                                activity in
+                                return activity.isDueThisWeek()
+                            }) { activity in
                                 
                                 ActivityCard(activity: activity)
                                 
@@ -137,7 +146,7 @@ struct Home: View {
                             .listRowBackground(Color.clear)
                             .listRowInsets(EdgeInsets())
                             .listRowSeparator(.hidden)
-                            .padding(.vertical, CSS.paddingVerticalList)
+                            .padding(.vertical, CSS.paddingVerticalScrollView)
                             
                         }
                         .padding()
