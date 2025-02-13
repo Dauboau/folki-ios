@@ -45,7 +45,6 @@ struct NavigationView: View {
                         Week(userSubjects: userSubjects)
                     }
                     .customizationID("com.myApp.week")
-                    .defaultVisibility(.hidden, for: .automatic)
                     
                     Tab("Calendário", systemImage: "calendar") {
                         LoginMenu()
@@ -57,7 +56,7 @@ struct NavigationView: View {
                     ScheduleHub(userSubjects: userSubjects)
                 }
                 .customizationID("com.myApp.schedule")
-                .defaultVisibility(.hidden, for: .automatic)
+                .defaultVisibility(.hidden, for: .sidebar)
                 
                 Tab("Atividades", systemImage: "bookmark.fill") {
                     Activities(activities: activities)
@@ -76,11 +75,11 @@ struct NavigationView: View {
                     .customizationID("com.myApp.grades")
                 }
                 
-                Tab("Subjects", systemImage: "books.vertical.fill") {
+                Tab("Disciplinas", systemImage: "books.vertical.fill") {
                     SubjectsHub(userSubjects:userSubjects)
                 }
                 .customizationID("com.myApp.subjects")
-                .defaultVisibility(.hidden, for: .automatic)
+                .defaultVisibility(.hidden, for: .sidebar)
                 
                 Tab("Configurações", systemImage: "gearshape.fill") {
                     Settings()

@@ -121,6 +121,7 @@ class Subject: Decodable, Equatable {
     }
     
     func update(subject: Subject){
+        self.id = subject.id
         self.name = subject.name
         self.code = subject.code
         self.content = subject.content
@@ -170,6 +171,7 @@ class SubjectClass: Decodable, Equatable {
     }
     
     func update(subjectClass: SubjectClass){
+        self.id = subjectClass.id
         self.subject.update(subject: subjectClass.subject)
         self.availableDays.forEach{ availableDayAux in
             availableDayAux.update(availableDay: availableDayAux)
