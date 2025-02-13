@@ -91,91 +91,93 @@ struct NavigationView: View {
             .tabViewCustomization($customization)
             .tint(Color("Primary_Purple"))
             .onAppear {
-                
-                Task.detached(){
-                    
-                    // Get user
-                    let userAux = getMe(token: token!)
-                    
-                    // Get userSubjects
-                    let userSubjectsAux = getUserSubjects(token: token!)
-                    
-                    // Get activities
-                    let activitiesAux = getUserActivities(token: token!)
-                    
-                    if(
-                        userAux == nil
-                        || userSubjectsAux == nil
-                        || activitiesAux == nil
-                    ){
-                        return
-                    }
-                
-                    await MainActor.run{
-                        
-                        // Inserting and Updating user
-                        if user == userAux {
-                            user.update(user: userAux!)
-                        }else{
-                            context.insert(userAux!)
-                        }
-                        
-                        // Inserting and Updating userSubjects
-                        for userSubjectAux in userSubjectsAux! {
-                            
-                            var userSubjectFound = false
-                            for userSubject in userSubjects {
-                                if(userSubject == userSubjectAux){
-                                    print("\(userSubject.subjectClass.subject.name) updated!")
-                                    userSubjectFound = true
-                                    userSubject.update(userSubject: userSubjectAux)
-                                    break
-                                }
-                            }
-                            
-                            if(!userSubjectFound){
-                                print("\(userSubjectAux.subjectClass.subject.name) created!")
-                                context.insert(userSubjectAux)
-                            }
-                            
-                        }
-                        
-                        // Inserting and Updating activities
-                        for activityAux in activitiesAux! {
-                            
-                            var activityFound = false
-                            for activity in activities {
-                                if(activity == activityAux){
-                                    print("\(activity.name) updated!")
-                                    activityFound = true
-                                    activity.update(activity: activityAux)
-                                    break
-                                }
-                            }
-                            
-                            if(!activityFound){
-                                print("\(activityAux.name) created!")
-                                context.insert(activityAux)
-                            }
-                            
-                        }
-                        
-                        // Save to persist the user data
-                        do {
-                            try context.save()
-                        } catch {
-                            print("Error saving context: \(error)")
-                        }
-                        
-                    }
-
-                }
-                
+                updateData()
             }
             
         }
         .navigationBarBackButtonHidden(true)
         
+    }
+    
+    func updateData() {
+        Task.detached(){
+            
+            // Get user
+            let userAux = getMe(token: token!)
+            
+            // Get userSubjects
+            let userSubjectsAux = getUserSubjects(token: token!)
+            
+            // Get activities
+            let activitiesAux = getUserActivities(token: token!)
+            
+            if(
+                userAux == nil
+                || userSubjectsAux == nil
+                || activitiesAux == nil
+            ){
+                return
+            }
+        
+            await MainActor.run{
+                
+                // Inserting and Updating user
+                if user == userAux {
+                    user.update(user: userAux!)
+                }else{
+                    context.insert(userAux!)
+                }
+                
+                // Inserting and Updating userSubjects
+                for userSubjectAux in userSubjectsAux! {
+                    
+                    var userSubjectFound = false
+                    for userSubject in userSubjects {
+                        if(userSubject == userSubjectAux){
+                            print("\(userSubject.subjectClass.subject.name) updated!")
+                            userSubjectFound = true
+                            userSubject.update(userSubject: userSubjectAux)
+                            break
+                        }
+                    }
+                    
+                    if(!userSubjectFound){
+                        print("\(userSubjectAux.subjectClass.subject.name) created!")
+                        context.insert(userSubjectAux)
+                    }
+                    
+                }
+                
+                // Inserting and Updating activities
+                for activityAux in activitiesAux! {
+                    
+                    var activityFound = false
+                    for activity in activities {
+                        if(activity == activityAux){
+                            print("\(activity.name) updated!")
+                            activityFound = true
+                            activity.update(activity: activityAux)
+                            break
+                        }
+                    }
+                    
+                    if(!activityFound){
+                        print("\(activityAux.name) created!")
+                        context.insert(activityAux)
+                    }
+                    
+                }
+                
+                // Save to persist the user data
+                do {
+                    try context.save()
+                } catch {
+                    print("Error saving context: \(error)")
+                }
+                
+            }
+
+        }
     }
 
 }

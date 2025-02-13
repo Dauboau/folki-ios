@@ -39,6 +39,11 @@ func login(uspCode: String, password: String, universityId: Int, completion: @es
 
 func getMe(token: String) -> User?{
     
+    // Check Cache
+    if let cacheResponse = Cache.shared.getCacheGetMeResponse(forToken: token){
+        return cacheResponse.user
+    }
+    
     do {
         
         let response = Just.get(url + "/users/me/", headers: ["Authorization": "Bearer \(token)"])
@@ -57,6 +62,9 @@ func getMe(token: String) -> User?{
         
         let getMeResponse: GetMeResponse = try JSONDecoder().decode(GetMeResponse.self, from: jsonData)
         
+        // Cache the Response
+        Cache.shared.setCacheGetMeResponse(getMeResponse, forToken: token)
+        
         return getMeResponse.user
         
     } catch {
@@ -67,6 +75,11 @@ func getMe(token: String) -> User?{
 }
 
 func getUserSubjects(token: String) -> [UserSubject]? {
+    
+    // Check Cache
+    if let cacheResponse = Cache.shared.getCacheGetUserSubjectsResponse(forToken: token){
+        return cacheResponse.userSubjects
+    }
     
     do {
         let response = Just.get(url + "/users/me/subjects", headers: ["Authorization": "Bearer \(token)"])
@@ -85,6 +98,9 @@ func getUserSubjects(token: String) -> [UserSubject]? {
         
         let getUserSubjectsResponse: GetUserSubjectsResponse = try JSONDecoder().decode(GetUserSubjectsResponse.self, from: jsonData)
         
+        // Cache the Response
+        Cache.shared.setCacheGetUserSubjectsResponse(getUserSubjectsResponse, forToken: token)
+        
         return getUserSubjectsResponse.userSubjects
         
     } catch {
@@ -94,6 +110,11 @@ func getUserSubjects(token: String) -> [UserSubject]? {
 }
 
 func getUserActivities(token: String) -> [Activity]? {
+    
+    // Check Cache
+    if let cacheResponse = Cache.shared.getCacheGetUserActivitiesResponse(forToken: token){
+        return cacheResponse.activities
+    }
     
     do {
         let response = Just.get(url + "/activities", headers: ["Authorization": "Bearer \(token)"])
@@ -111,6 +132,9 @@ func getUserActivities(token: String) -> [Activity]? {
         }
         
         let getUserActivitiesResponse: GetUserActivitiesResponse = try JSONDecoder().decode(GetUserActivitiesResponse.self, from: jsonData)
+        
+        // Cache the Response
+        Cache.shared.setCacheGetUserActivitiesResponse(getUserActivitiesResponse, forToken: token)
         
         return getUserActivitiesResponse.activities
         
