@@ -22,7 +22,7 @@ struct ScheduleHub: View {
                 VStack {
                     
                     if selectedSegment == "Week" {
-                        Absences(userSubjects:userSubjects)
+                        Week(userSubjects: userSubjects)
                     } else {
                         Grade(userSubjects:userSubjects)
                     }

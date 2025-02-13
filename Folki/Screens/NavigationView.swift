@@ -16,9 +16,11 @@ struct NavigationView: View {
     @Query() private var users: [User]
     var user: User { users.first ?? Default.user }
     
+    // Disciplinas ordenadas por ordem alfabética
     @Query(sort: \UserSubject.subjectClass.subject.name) private var userSubjects: [UserSubject]
     
-    @Query(sort: \Activity.name) private var activities: [Activity]
+    // Atividades ordenadas pela data de entrega
+    @Query(sort: \Activity.finishDate) private var activities: [Activity]
     
     // Tab View
     @AppStorage("customization") private var customization: TabViewCustomization = TabViewCustomization()
@@ -40,7 +42,7 @@ struct NavigationView: View {
                 
                 if UIDevice.current.userInterfaceIdiom != .phone {
                     Tab("Semana", systemImage: "list.bullet") {
-                        LoginMenu()
+                        Week(userSubjects: userSubjects)
                     }
                     .customizationID("com.myApp.week")
                     .defaultVisibility(.hidden, for: .automatic)

@@ -85,9 +85,6 @@ struct Home: View {
                                 ActivityCard(activity: activity)
                                 
                             }
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets())
-                            .listRowSeparator(.hidden)
                             .padding(.vertical, CSS.paddingVerticalScrollView)
                             
                         }
@@ -106,17 +103,27 @@ struct Home: View {
                                 Spacer()
                             }
                             
-                            ForEach(userSubjects.filter{
+                            // Disciplinas com aulas hoje
+                            let filteredSubjects = userSubjects.filter{
                                 userSubject in
                                 return userSubject.subjectClass.isToday()
-                            }) { userSubject in
+                            }
+                            
+                            // Disciplinas com aulas hoje ordenadas pelo horário de aula hoje
+                            let sortedFilteredSubjects = filteredSubjects.sorted { e1, e2 in
+                                let weekday = Calendar.current.component(.weekday, from: Date())
+                                
+                                let e1Start = e1.subjectClass.getFirstAvailableDayStart(matching: weekday)
+                                let e2Start = e2.subjectClass.getFirstAvailableDayStart(matching: weekday)
+                                
+                                return e1Start < e2Start
+                            }
+                            
+                            ForEach(sortedFilteredSubjects) { userSubject in
                                 
                                 WeekCard(userSubject:userSubject)
                                 
                             }
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets())
-                            .listRowSeparator(.hidden)
                             .padding(.vertical, CSS.paddingVerticalScrollView)
                             
                         }
@@ -143,9 +150,6 @@ struct Home: View {
                                 ActivityCard(activity: activity)
                                 
                             }
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets())
-                            .listRowSeparator(.hidden)
                             .padding(.vertical, CSS.paddingVerticalScrollView)
                             
                         }
@@ -154,9 +158,6 @@ struct Home: View {
                         .cornerRadius(CSS.cornerRadius)
                                                 
                     }
-                    .listStyle(.inset)
-                    .scrollContentBackground(.hidden)
-                    .contentMargins(.vertical, 0)
                     
                 }
                 .safeAreaPadding()

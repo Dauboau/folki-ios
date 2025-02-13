@@ -16,7 +16,7 @@ class UserSubject: Decodable, Equatable {
     var absences: Int?
     var grading: Float?
     var subjectClass: SubjectClass
-    var color: String?
+    var color: String
     var observation: String?
 
     // Initializer
@@ -25,7 +25,11 @@ class UserSubject: Decodable, Equatable {
         self.absences = absences
         self.grading = grading
         self.subjectClass = subjectClass
-        self.color = color
+        if(color == nil){
+            self.color = UserSubject.randomDarkColor()
+        }else{
+            self.color = color ?? "#7500BC"
+        }
         self.observation = observation
     }
     
@@ -55,9 +59,25 @@ class UserSubject: Decodable, Equatable {
         self.absences = userSubject.absences
         self.grading = userSubject.grading
         self.subjectClass.update(subjectClass: userSubject.subjectClass)
-        self.color = userSubject.color
+        //The colors should be preserved
+        //self.color = userSubject.color
         self.observation = userSubject.observation
     }
+    
+    private static func randomDarkColor() -> String {
+        let lum: CGFloat = -0.25
+        let randomHex = String(format: "#%06X", Int(arc4random_uniform(0xFFFFFF)))
+        
+        var darkHex = "#"
+        for i in 0..<3 {
+            var c = Int(randomHex.dropFirst(i * 2 + 1).prefix(2), radix: 16)!
+            c = max(0, min(255, Int(CGFloat(c) * (1 + lum))))
+            darkHex += String(format: "%02X", c)
+        }
+
+        return darkHex
+    }
+    
 }
 
 @Model
@@ -189,6 +209,14 @@ class SubjectClass: Decodable, Equatable {
         
     }
     
+    func getFirstAvailableDayStart(matching weekDay: Int) -> String {
+        let matchingDays = self.availableDays.filter { availableDay in
+            AvailableDay.Weekday[availableDay.day] == weekDay
+        }
+
+        return matchingDays.first?.start ?? "23:59"
+    }
+    
 }
 
 @Model
@@ -204,7 +232,16 @@ class AvailableDay: Decodable, Equatable, Comparable {
     
     // Static
     static let Weekday: [String: Int] = [
-        "dom": 1, "seg": 2, "ter": 3, "qua": 4, "qui": 5, "sex": 6, "sab": 7
+        "dom": 1, "seg": 2, "ter": 3, "qua": 4, "qui": 5, "sex": 6, "sab": 7 // default: 8
+    ]
+    static let WeekdayStr: [String: String] = [
+        "dom": "Domingo",
+        "seg": "Segunda-feira",
+        "ter": "Terça-feira",
+        "qua": "Quarta-feira",
+        "qui": "Quinta-feira",
+        "sex": "Sexta-feira",
+        "sab": "Sábado"
     ]
 
     // Initializer
@@ -249,7 +286,7 @@ class AvailableDay: Decodable, Equatable, Comparable {
      */
     func getNextDate() -> Date {
         let today = Date()
-        return today.getNextWeekday(AvailableDay.Weekday[self.day, default: 1])
+        return today.getNextWeekday(AvailableDay.Weekday[self.day, default: 8])
     }
     
 }
