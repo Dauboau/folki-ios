@@ -21,6 +21,7 @@ struct CSS {
 struct Default {
     
     static let user:User = User(id: 0, email: "estudante@gmail.com", name: "Estudante")
+    static let separator:String = "====-----====-----====-----===="
     
 }
 
@@ -74,3 +75,4 @@ extension Color {
         )
     }
 }
+

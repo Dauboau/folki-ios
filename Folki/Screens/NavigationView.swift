@@ -101,7 +101,7 @@ struct NavigationView: View {
     
     func updateData() {
         Task.detached(){
-            
+                        
             // Get user
             let userAux = getMe(token: token!)
             
@@ -121,10 +121,20 @@ struct NavigationView: View {
         
             await MainActor.run{
                 
+                #if DEBUG
+                print(Default.separator)
+                #endif
+                
                 // Inserting and Updating user
                 if user == userAux {
+                    #if DEBUG
+                    print("\(user.name ?? "Usuário") updated!")
+                    #endif
                     user.update(user: userAux!)
                 }else{
+                    #if DEBUG
+                    print("\(user.name ?? "Usuário") created!")
+                    #endif
                     context.insert(userAux!)
                 }
                 
@@ -134,7 +144,9 @@ struct NavigationView: View {
                     var userSubjectFound = false
                     for userSubject in userSubjects {
                         if(userSubject == userSubjectAux){
+                            #if DEBUG
                             print("\(userSubject.subjectClass.subject.name) updated!")
+                            #endif
                             userSubjectFound = true
                             userSubject.update(userSubject: userSubjectAux)
                             break
@@ -142,7 +154,9 @@ struct NavigationView: View {
                     }
                     
                     if(!userSubjectFound){
+                        #if DEBUG
                         print("\(userSubjectAux.subjectClass.subject.name) created!")
+                        #endif
                         context.insert(userSubjectAux)
                     }
                     
@@ -154,7 +168,9 @@ struct NavigationView: View {
                     var activityFound = false
                     for activity in activities {
                         if(activity == activityAux){
+                            #if DEBUG
                             print("\(activity.name) updated!")
+                            #endif
                             activityFound = true
                             activity.update(activity: activityAux)
                             break
@@ -162,7 +178,9 @@ struct NavigationView: View {
                     }
                     
                     if(!activityFound){
+                        #if DEBUG
                         print("\(activityAux.name) created!")
+                        #endif
                         context.insert(activityAux)
                     }
                     
@@ -174,6 +192,10 @@ struct NavigationView: View {
                 } catch {
                     print("Error saving context: \(error)")
                 }
+                
+                #if DEBUG
+                print(Default.separator)
+                #endif
                 
             }
 
