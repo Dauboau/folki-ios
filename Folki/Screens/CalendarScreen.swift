@@ -11,11 +11,103 @@ struct CalendarScreen: View {
     
     let activities : [Activity]
     
+    @State private var selectedDate: Date?
+    
     var body: some View {
         
-        CalendarView(activities: activities)
-            .navigationTitle("Activities Calendar")
+        CalendarView(activities: activities, selectedDate: $selectedDate)
         
+        Text("\(selectedDate ?? Date())")
+        
+    }
+}
+
+struct CalendarView: UIViewRepresentable {
+    
+    let activities: [Activity]
+    @Binding var selectedDate: Date?
+    
+    func makeUIView(context: Context) -> UICalendarView {
+        let calendarView = UICalendarView()
+        calendarView.delegate = context.coordinator
+        calendarView.availableDateRange = DateInterval(start: Date(), end: Calendar.current.date(byAdding: .year, value: 1, to: Date())!)
+
+        // Set up selection behavior for single date selection
+        let selection = UICalendarSelectionSingleDate(delegate: context.coordinator)
+        calendarView.selectionBehavior = selection
+        
+        return calendarView
+    }
+
+    func updateUIView(_ uiView: UICalendarView, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(activities: activities,selectedDate: $selectedDate)
+    }
+    
+    class Coordinator: NSObject, UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
+        
+        let activities: [Activity]
+        @Binding var selectedDate: Date?
+        
+        init(activities: [Activity],selectedDate: Binding<Date?>) {
+            self.activities = activities
+            _selectedDate = selectedDate
+        }
+        
+        // Date selection
+        func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
+            guard let dateComponents = dateComponents,
+                  let selectedDate = Calendar.current.date(from: dateComponents) else {
+                return
+            }
+
+            // Update the selected date in the SwiftUI view
+            self.selectedDate = selectedDate
+
+            // Print the selected date
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .none
+            let formattedDate = dateFormatter.string(from: selectedDate)
+            
+            print("Selected Date: \(formattedDate)")
+        }
+
+        // Runs for every date to decorate with activities
+        func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
+            
+            guard let date = Calendar.current.date(from: dateComponents) else { return nil }
+
+            // Filter activities due this date
+            let dueActivities = activities.filter { activity in
+                return Calendar.current.isDate(activity.getDeadlineDate() ?? Date(), inSameDayAs: date)
+            }
+            
+            if !dueActivities.isEmpty {
+                let dotCount = dueActivities.count
+                let parentView = UIView()
+                
+                var i = 0
+                for activity in dueActivities {
+                    // Small dot size
+                    let dot = UIView(frame: CGRect(x: i * 8, y: 0, width: 6, height: 6))
+                    dot.backgroundColor = UIColor(activity.getColor())
+                    dot.layer.cornerRadius = 3
+                    parentView.addSubview(dot)
+                    i += 1
+                }
+                
+                // Set the size of the parent view based on the number of dots
+                parentView.frame.size = CGSize(width: dotCount * 8, height: 6)
+
+                return .customView {
+                    return parentView
+                }
+            }
+            
+            return nil
+        }
     }
 }
 
@@ -67,74 +159,4 @@ struct CalendarScreen: View {
         checked:false
         )
     ])
-}
-
-struct CalendarView: UIViewRepresentable {
-    
-    let activities: [Activity]
-    
-    func makeUIView(context: Context) -> UICalendarView {
-        let calendarView = UICalendarView()
-        calendarView.delegate = context.coordinator
-        calendarView.availableDateRange = DateInterval(start: Date(), end: Calendar.current.date(byAdding: .year, value: 1, to: Date())!)
-        return calendarView
-    }
-
-    func updateUIView(_ uiView: UICalendarView, context: Context) {}
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(activities: activities)
-    }
-    
-    class Coordinator: NSObject, UICalendarViewDelegate {
-        
-        let activities: [Activity]
-        
-        init(activities: [Activity]) {
-            self.activities = activities
-        }
-
-        // Runs for every date
-        func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
-            
-            guard let date = Calendar.current.date(from: dateComponents) else { return nil }
-
-            // Filter activities due this date
-            let dueActivities = activities.filter {
-                activity in
-                return Calendar.current.isDate(activity.getDeadlineDate() ?? Date(), inSameDayAs: date)
-            }
-            
-            if !dueActivities.isEmpty {
-                
-                    let dotCount = dueActivities.count
-                    
-                    let parentView = UIView()
-                
-                    var i = 0
-                    for activity in dueActivities {
-                        
-                        // Small dot size
-                        let dot = UIView(frame: CGRect(x: i * 8, y: 0, width: 6, height: 6))
-                        
-                        dot.backgroundColor = UIColor(activity.getColor())
-                        dot.layer.cornerRadius = 3
-                        parentView.addSubview(dot)
-                        
-                        i+=1
-                    }
-                    
-                    // Set the size of the parent view based on the number of dots
-                    parentView.frame.size = CGSize(width: dotCount * 8, height: 6)
-
-                    return .customView {
-                        return parentView
-                    }
-                
-                }
-            else {
-                return nil
-            }
-        }
-    }
 }
