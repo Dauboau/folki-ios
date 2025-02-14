@@ -30,72 +30,68 @@ struct NavigationView: View {
     }
     
     var body: some View {
-        
-        NavigationStack {
                 
-            TabView {
-                
-                Tab("Início", systemImage: "house.fill") {
-                    Home(user: user, activities: activities, userSubjects: userSubjects)
-                }
-                .customizationID("com.myApp.home")
-                
-                if UIDevice.current.userInterfaceIdiom != .phone {
-                    Tab("Semana", systemImage: "list.bullet") {
-                        Week(userSubjects: userSubjects)
-                    }
-                    .customizationID("com.myApp.week")
-                    
-                    Tab("Calendário", systemImage: "calendar") {
-                        CalendarScreen(activities: activities)
-                    }
-                    .customizationID("com.myApp.calendar")
-                }
-                
-                Tab("Agenda", systemImage: "calendar.badge.clock") {
-                    ScheduleHub(userSubjects: userSubjects, activities: activities)
-                }
-                .customizationID("com.myApp.schedule")
-                .defaultVisibility(.hidden, for: .sidebar)
-                
-                Tab("Atividades", systemImage: "bookmark.fill") {
-                    Activities(activities: activities)
-                }
-                .customizationID("com.myApp.activities")
-                
-                if UIDevice.current.userInterfaceIdiom != .phone {
-                    Tab("Faltas", systemImage: "bag.fill") {
-                        Absences(userSubjects: userSubjects)
-                    }
-                    .customizationID("com.myApp.absences")
-                    
-                    Tab("Notas", systemImage: "tray.full.fill") {
-                        Grade(userSubjects: userSubjects)
-                    }
-                    .customizationID("com.myApp.grades")
-                }
-                
-                Tab("Disciplinas", systemImage: "books.vertical.fill") {
-                    SubjectsHub(userSubjects:userSubjects)
-                }
-                .customizationID("com.myApp.subjects")
-                .defaultVisibility(.hidden, for: .sidebar)
-                
-                Tab("Configurações", systemImage: "gearshape.fill") {
-                    Settings()
-                }
-                .customizationID("com.myApp.settings")
-                
+        TabView {
+            
+            Tab("Início", systemImage: "house.fill") {
+                Home(user: user, activities: activities, userSubjects: userSubjects)
             }
-            .tabViewStyle(.sidebarAdaptable)
-            .tabViewCustomization($customization)
-            .tint(Color("Primary_Purple"))
-            .onAppear {
-                updateData()
+            .customizationID("com.myApp.home")
+            
+            if UIDevice.current.userInterfaceIdiom != .phone {
+                Tab("Semana", systemImage: "list.bullet") {
+                    Week(userSubjects: userSubjects)
+                }
+                .customizationID("com.myApp.week")
+                
+                Tab("Calendário", systemImage: "calendar") {
+                    CalendarScreen(activities: activities)
+                }
+                .customizationID("com.myApp.calendar")
             }
+            
+            Tab("Agenda", systemImage: "calendar.badge.clock") {
+                ScheduleHub(userSubjects: userSubjects, activities: activities)
+            }
+            .customizationID("com.myApp.schedule")
+            .defaultVisibility(.hidden, for: .sidebar)
+            
+            Tab("Atividades", systemImage: "bookmark.fill") {
+                Activities(activities: activities)
+            }
+            .customizationID("com.myApp.activities")
+            
+            if UIDevice.current.userInterfaceIdiom != .phone {
+                Tab("Faltas", systemImage: "bag.fill") {
+                    Absences(userSubjects: userSubjects)
+                }
+                .customizationID("com.myApp.absences")
+                
+                Tab("Notas", systemImage: "tray.full.fill") {
+                    Grade(userSubjects: userSubjects)
+                }
+                .customizationID("com.myApp.grades")
+            }
+            
+            Tab("Disciplinas", systemImage: "books.vertical.fill") {
+                SubjectsHub(userSubjects:userSubjects)
+            }
+            .customizationID("com.myApp.subjects")
+            .defaultVisibility(.hidden, for: .sidebar)
+            
+            Tab("Configurações", systemImage: "gearshape.fill") {
+                Settings()
+            }
+            .customizationID("com.myApp.settings")
             
         }
         .navigationBarBackButtonHidden(true)
+        .tabViewStyle(.sidebarAdaptable)
+        .tabViewCustomization($customization)
+        .tint(Color("Primary_Purple"))
+        .onAppear {
+            updateData()
+        }
         
     }
     

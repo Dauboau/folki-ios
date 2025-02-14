@@ -13,8 +13,7 @@ struct CalendarScreen: View {
     
     @State private var selectedDate: Date?
     
-    @State private var preferredColumn =
-        NavigationSplitViewColumn.sidebar
+    @State private var preferredColumn = NavigationSplitViewColumn.sidebar
     
     var body: some View {
             
@@ -22,8 +21,7 @@ struct CalendarScreen: View {
             
             ZStack{
                 
-                Color("Gray_2")
-                    .ignoresSafeArea()
+                DefaultBackground()
                 
                 VStack{
                     
@@ -40,7 +38,6 @@ struct CalendarScreen: View {
                 //.frame(maxHeight: 500)
                 
             }
-            //.navigationSplitViewColumnWidth(min: 400, ideal: 425, max: 900)
             
         } detail: {
             
@@ -62,7 +59,6 @@ struct CalendarScreen: View {
             
         }
         .navigationSplitViewStyle(.balanced)
-        .safeAreaPadding()
 
     }
 }

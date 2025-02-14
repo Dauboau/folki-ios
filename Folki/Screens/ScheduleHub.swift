@@ -15,30 +15,31 @@ struct ScheduleHub: View {
     @State private var selectedSegment: String = "Week" // Default
     
     var body: some View {
-        NavigationStack {
-            ZStack{
+        
+        ZStack{
+            
+            DefaultBackground()
+            
+            VStack {
                 
-                DefaultBackground()
-                
-                VStack {
-                    
-                    if selectedSegment == "Week" {
-                        Week(userSubjects: userSubjects)
-                    } else {
-                        CalendarScreen(activities: activities)
-                    }
-                    
-                    Picker("Select View", selection: $selectedSegment) {
-                        Text("Semana").tag("Week")
-                        Text("Calendário").tag("Calendar")
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding()
-                    .frame(maxWidth:CSS.maxWidth)
-                    
+                if selectedSegment == "Week" {
+                    Week(userSubjects: userSubjects)
+                } else {
+                    CalendarScreen(activities: activities)
                 }
+                
+                Picker("Select View", selection: $selectedSegment) {
+                    Text("Semana").tag("Week")
+                    Text("Calendário").tag("Calendar")
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
+                .frame(maxWidth:CSS.maxWidth)
+                
             }
+            
         }
+        
     }
 }
 
