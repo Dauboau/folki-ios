@@ -214,7 +214,7 @@ struct ActivityCard: View {
                 .cornerRadius(CSS.cornerRadius)
 
             NavigationLink(destination:
-                EmptyView()
+                ActivityList(activity: activity)
             ){
                 VStack {
                     HStack {

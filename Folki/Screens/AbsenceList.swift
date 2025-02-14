@@ -14,8 +14,7 @@ struct AbsenceList: View {
     var body: some View {
         ZStack {
             
-            Color.gray2
-                .ignoresSafeArea()
+            DefaultBackground()
 
             VStack {
                 

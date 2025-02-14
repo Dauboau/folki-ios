@@ -124,6 +124,17 @@ class Activity: Decodable, Equatable {
         return false
     }
     
+    func isDue(_ date: Date) -> Bool {
+        
+        if let dueDate = getDeadlineDate() {
+            let calendar = Calendar.current
+            return calendar.isDate(dueDate,equalTo: date,toGranularity: .dayOfYear)
+        }
+
+        return false
+        
+    }
+    
     func isDueThisWeek() -> Bool {
         
         if let date = getDeadlineDate() {

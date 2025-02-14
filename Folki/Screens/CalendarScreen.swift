@@ -11,13 +11,22 @@ struct CalendarScreen: View {
     
     let activities : [Activity]
     
-    @State private var selectedDate: Date?
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
+    @State private var selectedDate: Date? = Date()
+    @State private var selectedActivity: Activity?
     
     @State private var preferredColumn = NavigationSplitViewColumn.sidebar
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
+    
+    init(activities: [Activity]) {
+        self.activities = activities
+    }
     
     var body: some View {
             
-        NavigationSplitView(columnVisibility: .constant(.all), preferredCompactColumn: $preferredColumn){
+        NavigationSplitView(columnVisibility: $columnVisibility, preferredCompactColumn: $preferredColumn){
             
             ZStack{
                 
@@ -28,32 +37,73 @@ struct CalendarScreen: View {
                     CalendarView(activities: activities, selectedDate: $selectedDate)
                     
                         .onChange(of: selectedDate){
-                            preferredColumn = NavigationSplitViewColumn.detail
+                            preferredColumn = NavigationSplitViewColumn.content
                         }
                     
                 }
                 .safeAreaPadding()
-                .toolbar(removing: .sidebarToggle)
+                //.toolbar(removing: .sidebarToggle)
                 .frame(maxHeight: 500)
+                
+            }
+            
+        } content: {
+            
+            NavigationStack{
+                
+                ZStack{
+                    
+                    DefaultBackground()
+                    
+                    VStack{
+                        
+                        Text("\(selectedDate?.formatted(date: .numeric, time: .omitted) ?? "")")
+                            .foregroundStyle(.white)
+                            .font(.title)
+                            .bold()
+                        
+                        let dayActivities = activities.filter{
+                            activity in
+                            if(selectedDate != nil){
+                                return activity.isDue(selectedDate!)
+                            }
+                            return false
+                        }
+                        
+                        ScrollView{
+                            
+                            ForEach(dayActivities) { activity in
+                                
+                                ActivityCard(activity:activity)
+                                    .padding(.vertical, CSS.paddingVerticalScrollView)
+                    
+                            }
+            
+                        }
+                        
+                    }
+                    .safeAreaPadding()
+                    
+                }
                 
             }
             
         } detail: {
             
-            ZStack{
-                
-                DefaultBackground()
-                
-                VStack{
-                    
-                    Text("\(selectedDate ?? Date())")
-                        .navigationSplitViewColumnWidth(min: 300, ideal: 350, max: 400)
-                        .foregroundStyle(.white)
-                        .font(.title3)
-                    
+            if(!activities.isEmpty){
+                ActivityList(activity: activities.first!)
+            }else{
+                ZStack{
+                    DefaultBackground()
+                    VStack{
+                        Text("Nenhuma Atividade Cadastrada")
+                            .font(.largeTitle)
+                            .bold()
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                    }
+                    .safeAreaPadding()
                 }
-                .safeAreaPadding()
-                
             }
             
         }
