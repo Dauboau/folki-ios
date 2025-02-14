@@ -26,7 +26,15 @@ struct NavigationView: View {
     @AppStorage("customization") private var customization: TabViewCustomization = TabViewCustomization()
     init() {
         UITabBar.appearance().barStyle = .black
+        UITabBar.appearance().shadowImage = UIImage()
+        UITabBar.appearance().backgroundImage = UIImage()
+        UITabBar.appearance().isTranslucent = true
         UITabBar.appearance().backgroundColor = UIColor(Color(DefaultBackground.color))
+        if UIDevice.current.userInterfaceIdiom != .phone {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                windowScene.windows.first?.overrideUserInterfaceStyle = .dark
+            }
+        }
     }
     
     var body: some View {
@@ -83,7 +91,7 @@ struct NavigationView: View {
                 Settings()
             }
             .customizationID("com.myApp.settings")
-            
+                
         }
         .navigationBarBackButtonHidden(true)
         .tabViewStyle(.sidebarAdaptable)
