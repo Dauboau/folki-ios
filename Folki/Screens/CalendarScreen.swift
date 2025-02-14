@@ -34,8 +34,7 @@ struct CalendarScreen: View {
                 }
                 .safeAreaPadding()
                 .toolbar(removing: .sidebarToggle)
-                
-                //.frame(maxHeight: 500)
+                .frame(maxHeight: 500)
                 
             }
             
