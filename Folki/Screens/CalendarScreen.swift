@@ -13,12 +13,57 @@ struct CalendarScreen: View {
     
     @State private var selectedDate: Date?
     
+    @State private var preferredColumn =
+        NavigationSplitViewColumn.sidebar
+    
     var body: some View {
-        
-        CalendarView(activities: activities, selectedDate: $selectedDate)
-        
-        Text("\(selectedDate ?? Date())")
-        
+            
+        NavigationSplitView(columnVisibility: .constant(.all), preferredCompactColumn: $preferredColumn){
+            
+            ZStack{
+                
+                Color("Gray_2")
+                    .ignoresSafeArea()
+                
+                VStack{
+                    
+                    CalendarView(activities: activities, selectedDate: $selectedDate)
+                    
+                        .onChange(of: selectedDate){
+                            preferredColumn = NavigationSplitViewColumn.detail
+                        }
+                    
+                }
+                .safeAreaPadding()
+                .toolbar(removing: .sidebarToggle)
+                
+                //.frame(maxHeight: 500)
+                
+            }
+            //.navigationSplitViewColumnWidth(min: 400, ideal: 425, max: 900)
+            
+        } detail: {
+            
+            ZStack{
+                
+                DefaultBackground()
+                
+                VStack{
+                    
+                    Text("\(selectedDate ?? Date())")
+                        .navigationSplitViewColumnWidth(min: 300, ideal: 350, max: 400)
+                        .foregroundStyle(.white)
+                        .font(.title3)
+                    
+                }
+                .safeAreaPadding()
+                
+            }
+            
+        }
+        .navigationSplitViewStyle(.balanced)
+        .safeAreaPadding()
+
     }
 }
 
@@ -30,11 +75,16 @@ struct CalendarView: UIViewRepresentable {
     func makeUIView(context: Context) -> UICalendarView {
         let calendarView = UICalendarView()
         calendarView.delegate = context.coordinator
-        calendarView.availableDateRange = DateInterval(start: Date(), end: Calendar.current.date(byAdding: .year, value: 1, to: Date())!)
+        calendarView.availableDateRange = DateInterval(start: Date(), end: Calendar.current.date(byAdding: .month, value: 6, to: Date())!)
+        calendarView.overrideUserInterfaceStyle = .dark
 
         // Set up selection behavior for single date selection
         let selection = UICalendarSelectionSingleDate(delegate: context.coordinator)
         calendarView.selectionBehavior = selection
+        
+        // Accepts SwiftUI customizations
+        calendarView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        calendarView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         
         return calendarView
     }
