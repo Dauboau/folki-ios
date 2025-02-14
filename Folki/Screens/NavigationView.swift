@@ -47,13 +47,13 @@ struct NavigationView: View {
                     .customizationID("com.myApp.week")
                     
                     Tab("Calendário", systemImage: "calendar") {
-                        LoginMenu()
+                        CalendarScreen(activities: activities)
                     }
                     .customizationID("com.myApp.calendar")
                 }
                 
                 Tab("Agenda", systemImage: "calendar.badge.clock") {
-                    ScheduleHub(userSubjects: userSubjects)
+                    ScheduleHub(userSubjects: userSubjects, activities: activities)
                 }
                 .customizationID("com.myApp.schedule")
                 .defaultVisibility(.hidden, for: .sidebar)

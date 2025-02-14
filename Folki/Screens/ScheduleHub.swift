@@ -10,6 +10,7 @@ import SwiftUI
 struct ScheduleHub: View {
 
     let userSubjects : [UserSubject]
+    let activities : [Activity]
 
     @State private var selectedSegment: String = "Week" // Default
     
@@ -24,7 +25,7 @@ struct ScheduleHub: View {
                     if selectedSegment == "Week" {
                         Week(userSubjects: userSubjects)
                     } else {
-                        Grade(userSubjects:userSubjects)
+                        CalendarScreen(activities: activities)
                     }
                     
                     Picker("Select View", selection: $selectedSegment) {
@@ -94,6 +95,22 @@ struct ScheduleHub: View {
                         driveItemsNumber: 0
                     )
                 )
+            )
+        ], activities: [
+            Activity(id: 7757, name: "Lição de Multimídia", activityDescription: "", value: 3, subjectClassId: 21074, finishDate: "2025-02-12T15:00:00.000Z", type: "ACTIVITY",
+                subjectClass: SubjectClass(
+                    id: 21074,
+                    availableDays: [
+                        AvailableDay(day: "qua", start: "14:00", end: "17:00")
+                    ],
+                    subject: Subject(
+                        id: 15461,
+                        name: "Teste e Inspeção de Software",
+                        code: "SCC0261",
+                        driveItemsNumber: 0
+                    )
+                ),
+            checked:false
             )
         ]
     )
