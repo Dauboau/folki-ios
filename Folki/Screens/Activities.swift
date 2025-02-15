@@ -56,7 +56,7 @@ struct Activities: View {
                                         .swipeActions(edge: .leading,allowsFullSwipe: true){
                                             SwipeCheck(activity: activity)
                                         }
-                                        .swipeActions(edge: .trailing,allowsFullSwipe: true){
+                                        .swipeActions(edge: .trailing,allowsFullSwipe: false){
                                             SwipeDelete(activity: activity)
                                             SwipeEdit(activity: activity)
                                         }
@@ -86,7 +86,7 @@ struct Activities: View {
                                         .swipeActions(edge: .leading,allowsFullSwipe: true){
                                             SwipeCheck(activity: activity)
                                         }
-                                        .swipeActions(edge: .trailing,allowsFullSwipe: true){
+                                        .swipeActions(edge: .trailing,allowsFullSwipe: false){
                                             SwipeDelete(activity: activity)
                                             SwipeEdit(activity: activity)
                                         }
@@ -116,7 +116,7 @@ struct Activities: View {
                                         .swipeActions(edge: .leading,allowsFullSwipe: true){
                                             SwipeUncheck(activity: activity)
                                         }
-                                        .swipeActions(edge: .trailing,allowsFullSwipe: true){
+                                        .swipeActions(edge: .trailing,allowsFullSwipe: false){
                                             SwipeDelete(activity: activity)
                                             SwipeEdit(activity: activity)
                                         }
