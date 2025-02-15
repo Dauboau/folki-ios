@@ -11,10 +11,26 @@ struct ActivityList: View {
     
     let activity : Activity
     
+    let backgroundDefault: Bool
+    
+    init(activity: Activity,backgroundDefault: Bool = true) {
+        self.activity = activity
+        self.backgroundDefault = backgroundDefault
+    }
+    
     var body: some View {
         ZStack {
             
             DefaultBackground()
+            
+            if(!backgroundDefault){
+                if(UIDevice.current.userInterfaceIdiom == .phone){
+                    activity.getColor()
+                }else{
+                    activity.getColor()
+                        .ignoresSafeArea()
+                }
+            }
 
             VStack {
                 
@@ -25,23 +41,19 @@ struct ActivityList: View {
                 
                 Spacer()
                 
-                HStack{
-                    Text("\(activity.name)")
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .padding(.bottom,CSS.paddingBottomText)
+                Text("\(activity.name)")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding(.bottom,CSS.paddingBottomText)
                 
-                HStack{
-                    Text("\(activity.subjectClass?.subject.name ?? "")")
-                        .foregroundColor(.white)
-                    Spacer()
-                }
-                .padding(.bottom,CSS.paddingBottomText)
+                Text("\(activity.subjectClass?.subject.name ?? "") - \(String(format: "%.1f", activity.value)) Pontos")
+                    .foregroundColor(.white)
                 
                 Spacer()
+                
+                Text("\(activity.getDeadlineDate()?.formatted(date: .complete, time: .omitted) ?? "")")
+                    .foregroundColor(.white)
                 
             }
             .safeAreaPadding()
@@ -66,6 +78,7 @@ struct ActivityList: View {
                  )
              ),
          checked:false
-        )
+        ),
+        backgroundDefault:false
     )
 }

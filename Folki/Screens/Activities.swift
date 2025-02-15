@@ -52,7 +52,7 @@ struct Activities: View {
                                     return (activity.isLate() == true && activity.checked == false && activity.deletedAt == nil)
                                 },id: \.self){ activity in
                                     
-                                    ActivityCard(activity:activity)
+                                    ActivityCard(activity:activity,backgroundDefault:false)
                                         .swipeActions(edge: .leading,allowsFullSwipe: true){
                                             SwipeCheck(activity: activity)
                                         }
@@ -82,7 +82,7 @@ struct Activities: View {
                                     return (activity.isLate() == false && activity.checked == false && activity.deletedAt == nil)
                                 }) { activity in
                                     
-                                    ActivityCard(activity:activity)
+                                    ActivityCard(activity:activity,backgroundDefault:false)
                                         .swipeActions(edge: .leading,allowsFullSwipe: true){
                                             SwipeCheck(activity: activity)
                                         }
@@ -112,7 +112,7 @@ struct Activities: View {
                                     return (activity.checked == true && activity.deletedAt == nil)
                                 }) { activity in
                                     
-                                    ActivityCard(activity:activity)
+                                    ActivityCard(activity:activity,backgroundDefault:false)
                                         .swipeActions(edge: .leading,allowsFullSwipe: true){
                                             SwipeUncheck(activity: activity)
                                         }
@@ -142,7 +142,7 @@ struct Activities: View {
                                     return (activity.deletedAt != nil)
                                 }) { activity in
                                     
-                                    ActivityCard(activity:activity)
+                                    ActivityCard(activity:activity,backgroundDefault:false)
                                         .swipeActions(edge: .leading,allowsFullSwipe: true){
                                             SwipeRestore(activity: activity)
                                         }
@@ -205,6 +205,13 @@ struct Activities: View {
 struct ActivityCard: View {
     
     let activity : Activity
+    
+    let backgroundDefault:Bool
+    
+    init(activity: Activity, backgroundDefault: Bool = true) {
+        self.activity = activity
+        self.backgroundDefault = backgroundDefault
+    }
 
     var body: some View {
         
@@ -214,7 +221,7 @@ struct ActivityCard: View {
                 .cornerRadius(CSS.cornerRadius)
 
             NavigationLink(destination:
-                ActivityList(activity: activity)
+                            ActivityList(activity: activity,backgroundDefault:backgroundDefault)
             ){
                 VStack {
                     HStack {

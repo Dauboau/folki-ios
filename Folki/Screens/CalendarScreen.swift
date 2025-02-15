@@ -11,73 +11,21 @@ struct CalendarScreen: View {
     
     let activities : [Activity]
     
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    
     @State private var selectedDate: Date? = Date()
     @State private var selectedActivity: Activity?
     
-    @State private var preferredColumn = NavigationSplitViewColumn.sidebar
-    @State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var preferredColumn:NavigationSplitViewColumn = NavigationSplitViewColumn.sidebar
+    @State private var columnVisibility:NavigationSplitViewVisibility = .doubleColumn
     
     init(activities: [Activity]) {
         self.activities = activities
     }
     
     var body: some View {
+        
+        GeometryReader { geometry in
             
-        NavigationSplitView(columnVisibility: $columnVisibility, preferredCompactColumn: $preferredColumn){
-            
-            ZStack{
-                
-                DefaultBackground()
-                
-                VStack{
-                    
-                    HStack{
-                        Text("Calendário")
-                            .font(.largeTitle)
-                            .bold()
-                            .foregroundColor(.white)
-                        Spacer()
-                    }
-                    .padding(.bottom,CSS.paddingBottomText)
-                    
-                    HStack{
-                        Text("Vamos organizar seu dia!")
-                            .foregroundColor(.white)
-                        Spacer()
-                    }
-                    .padding(.bottom,CSS.paddingBottomText)
-                    
-                    Spacer()
-                    
-                    CalendarView(activities: activities, selectedDate: $selectedDate)
-                        .frame(maxHeight: 500)
-                    
-                        .onChange(of: selectedDate){
-                            preferredColumn = NavigationSplitViewColumn.content
-                        }
-                    
-                    Spacer()
-                    
-                }
-                .safeAreaPadding()
-                //.toolbar(removing: .sidebarToggle)
-                
-            }
-            
-        } content: {
-            
-            let dayActivities = activities.filter{
-                activity in
-                if(selectedDate != nil){
-                    return activity.isDue(selectedDate!)
-                }
-                return false
-            }
-            
-            NavigationStack{
+            NavigationSplitView(columnVisibility: $columnVisibility, preferredCompactColumn: $preferredColumn){
                 
                 ZStack{
                     
@@ -85,12 +33,116 @@ struct CalendarScreen: View {
                     
                     VStack{
                         
-                        Text("\(selectedDate?.formatted(date: .numeric, time: .omitted) ?? "")")
-                            .foregroundStyle(.white)
-                            .font(.title)
-                            .bold()
+                        HStack{
+                            Text("Calendário")
+                                .font(.largeTitle)
+                                .bold()
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
+                        .padding(.bottom,CSS.paddingBottomText)
                         
-                        if(dayActivities.isEmpty){
+                        HStack{
+                            Text("Vamos organizar seu dia!")
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
+                        .padding(.bottom,CSS.paddingBottomText)
+                        
+                        Spacer()
+                        
+                        CalendarView(activities: activities, selectedDate: $selectedDate)
+                            .frame(maxHeight: 500)
+                        
+                            .onChange(of: selectedDate){
+                                preferredColumn = NavigationSplitViewColumn.content
+                            }
+                        
+                        Spacer()
+                        
+                    }
+                    .safeAreaPadding()
+                    //.toolbar(removing: .sidebarToggle)
+                    
+                }
+                
+            } content: {
+                
+                let dayActivities = activities.filter{
+                    activity in
+                    if(selectedDate != nil){
+                        return activity.isDue(selectedDate!)
+                    }
+                    return false
+                }
+                
+                NavigationStack{
+                    
+                    ZStack{
+                        
+                        DefaultBackground()
+                        
+                        VStack{
+                            
+                            Text("\(selectedDate?.formatted(date: .numeric, time: .omitted) ?? "")")
+                                .foregroundStyle(.white)
+                                .font(.title)
+                                .bold()
+                            
+                            if(dayActivities.isEmpty){
+                                
+                                Spacer()
+                                
+                                Text("Nenhuma Atividade Encontrada")
+                                    .font(.largeTitle)
+                                    .bold()
+                                    .foregroundColor(.white)
+                                    .multilineTextAlignment(.center)
+                                Spacer()
+                                
+                                
+                            }else{
+                                
+                                ScrollView{
+                                    
+                                    ForEach(dayActivities) { activity in
+                                        
+                                        ActivityCard(activity:activity)
+                                            .padding(.vertical, CSS.paddingVerticalScrollView)
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        .safeAreaPadding()
+                        
+                    }
+                    
+                }
+                
+            } detail: {
+                
+                let firstActivity = activities.first{
+                    activity in
+                    return activity.isDue(selectedDate ?? Date())
+                }
+                
+                if(firstActivity != nil){
+                    ActivityList(activity: firstActivity!)
+                }else{
+                    ZStack{
+                        
+                        DefaultBackground()
+                        
+                        VStack{
+                            
+                            Text("Atividade")
+                                .font(.title)
+                                .bold()
+                                .foregroundColor(.white)
                             
                             Spacer()
                             
@@ -99,71 +151,30 @@ struct CalendarScreen: View {
                                 .bold()
                                 .foregroundColor(.white)
                                 .multilineTextAlignment(.center)
+                            
                             Spacer()
                             
-                            
-                        }else{
-                            
-                            ScrollView{
-                                
-                                ForEach(dayActivities) { activity in
-                                    
-                                    ActivityCard(activity:activity)
-                                        .padding(.vertical, CSS.paddingVerticalScrollView)
-                                    
-                                }
-                                
-                            }
-                            
                         }
+                        .safeAreaPadding()
                         
                     }
-                    .safeAreaPadding()
                     
                 }
                 
             }
+            .navigationSplitViewStyle(.balanced)
             
-        } detail: {
-            
-            let firstActivity = activities.first{
-                activity in
-                return activity.isDue(selectedDate ?? Date())
+            .onAppear(){
+                let isPortrait = geometry.size.height > geometry.size.width
+                self.columnVisibility = isPortrait ? .doubleColumn : .all
             }
             
-            if(firstActivity != nil){
-                ActivityList(activity: firstActivity!)
-            }else{
-                ZStack{
-                    
-                    DefaultBackground()
-                    
-                    VStack{
-                        
-                        Text("Atividade")
-                            .font(.title)
-                            .bold()
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                        
-                        Text("Nenhuma Atividade Encontrada")
-                            .font(.largeTitle)
-                            .bold()
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.center)
-                        
-                        Spacer()
-                        
-                    }
-                    .safeAreaPadding()
-                    
-                }
-                
+            .onChange(of: geometry.size) {
+                let isPortrait = geometry.size.height > geometry.size.width
+                self.columnVisibility = isPortrait ? .doubleColumn : .all
             }
             
         }
-        .navigationSplitViewStyle(.balanced)
 
     }
 }

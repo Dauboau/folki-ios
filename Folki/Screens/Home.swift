@@ -82,7 +82,7 @@ struct Home: View {
                                 return activity.isDueToday()
                             }) { activity in
                                 
-                                ActivityCard(activity: activity)
+                                ActivityCard(activity: activity,backgroundDefault:false)
                                 
                             }
                             .padding(.vertical, CSS.paddingVerticalScrollView)
@@ -147,7 +147,7 @@ struct Home: View {
                                 return activity.isDueThisWeek()
                             }) { activity in
                                 
-                                ActivityCard(activity: activity)
+                                ActivityCard(activity: activity,backgroundDefault:false)
                                 
                             }
                             .padding(.vertical, CSS.paddingVerticalScrollView)
