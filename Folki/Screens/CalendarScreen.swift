@@ -34,20 +34,48 @@ struct CalendarScreen: View {
                 
                 VStack{
                     
+                    HStack{
+                        Text("Calendário")
+                            .font(.largeTitle)
+                            .bold()
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .padding(.bottom,CSS.paddingBottomText)
+                    
+                    HStack{
+                        Text("Vamos organizar seu dia!")
+                            .foregroundColor(.white)
+                        Spacer()
+                    }
+                    .padding(.bottom,CSS.paddingBottomText)
+                    
+                    Spacer()
+                    
                     CalendarView(activities: activities, selectedDate: $selectedDate)
+                        .frame(maxHeight: 500)
                     
                         .onChange(of: selectedDate){
                             preferredColumn = NavigationSplitViewColumn.content
                         }
                     
+                    Spacer()
+                    
                 }
                 .safeAreaPadding()
                 //.toolbar(removing: .sidebarToggle)
-                .frame(maxHeight: 500)
                 
             }
             
         } content: {
+            
+            let dayActivities = activities.filter{
+                activity in
+                if(selectedDate != nil){
+                    return activity.isDue(selectedDate!)
+                }
+                return false
+            }
             
             NavigationStack{
                 
@@ -62,23 +90,31 @@ struct CalendarScreen: View {
                             .font(.title)
                             .bold()
                         
-                        let dayActivities = activities.filter{
-                            activity in
-                            if(selectedDate != nil){
-                                return activity.isDue(selectedDate!)
-                            }
-                            return false
-                        }
-                        
-                        ScrollView{
+                        if(dayActivities.isEmpty){
                             
-                            ForEach(dayActivities) { activity in
+                            Spacer()
+                            
+                            Text("Nenhuma Atividade Encontrada")
+                                .font(.largeTitle)
+                                .bold()
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
+                            Spacer()
+                            
+                            
+                        }else{
+                            
+                            ScrollView{
                                 
-                                ActivityCard(activity:activity)
-                                    .padding(.vertical, CSS.paddingVerticalScrollView)
-                    
+                                ForEach(dayActivities) { activity in
+                                    
+                                    ActivityCard(activity:activity)
+                                        .padding(.vertical, CSS.paddingVerticalScrollView)
+                                    
+                                }
+                                
                             }
-            
+                            
                         }
                         
                     }
@@ -90,20 +126,40 @@ struct CalendarScreen: View {
             
         } detail: {
             
-            if(!activities.isEmpty){
-                ActivityList(activity: activities.first!)
+            let firstActivity = activities.first{
+                activity in
+                return activity.isDue(selectedDate ?? Date())
+            }
+            
+            if(firstActivity != nil){
+                ActivityList(activity: firstActivity!)
             }else{
                 ZStack{
+                    
                     DefaultBackground()
+                    
                     VStack{
-                        Text("Nenhuma Atividade Cadastrada")
+                        
+                        Text("Atividade")
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(.white)
+                        
+                        Spacer()
+                        
+                        Text("Nenhuma Atividade Encontrada")
                             .font(.largeTitle)
                             .bold()
                             .foregroundColor(.white)
                             .multilineTextAlignment(.center)
+                        
+                        Spacer()
+                        
                     }
                     .safeAreaPadding()
+                    
                 }
+                
             }
             
         }

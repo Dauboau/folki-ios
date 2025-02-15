@@ -166,4 +166,21 @@ class Activity: Decodable, Equatable {
         
     }
     
+    func getType() -> String {
+        
+        switch (self.type) {
+            case "EXAM":
+                return "Prova"
+            case "HOMEWORK":
+                return "Trabalho"
+            case "ACTIVITY":
+                return "Atividade"
+            case "LIST":
+                return "Lista"
+            default:
+                return "Outro"
+        }
+        
+    }
+    
 }

@@ -18,6 +18,13 @@ struct ActivityList: View {
 
             VStack {
                 
+                Text("\(activity.getType())")
+                    .foregroundStyle(.white)
+                    .font(.title)
+                    .bold()
+                
+                Spacer()
+                
                 HStack{
                     Text("\(activity.name)")
                         .font(.largeTitle)
@@ -33,6 +40,8 @@ struct ActivityList: View {
                     Spacer()
                 }
                 .padding(.bottom,CSS.paddingBottomText)
+                
+                Spacer()
                 
             }
             .safeAreaPadding()
