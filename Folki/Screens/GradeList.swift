@@ -125,6 +125,25 @@ struct GradeList: View {
                     
                 }
                 
+                // Deleting grades
+                for grade in grades {
+                    if(!gradesAux!.contains(where: { $0 == grade })){
+                        print("\(grade.name) deleted!")
+                        context.delete(grade)
+                    }
+                }
+                
+                // Save to persist the user data
+                do {
+                    try context.save()
+                } catch {
+                    print("Error saving context: \(error)")
+                }
+                
+                #if DEBUG
+                print(Default.separator)
+                #endif
+                
             }
             
         }
