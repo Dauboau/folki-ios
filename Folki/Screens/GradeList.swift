@@ -9,7 +9,11 @@ import SwiftUI
 
 struct GradeList: View {
     
+    let token : String? = UserDefaults.standard.string(forKey: "token")
+    
     let userSubject : UserSubject
+    
+    @State var grades : [Grade] = []
     
     var body: some View {
         ZStack {
@@ -37,8 +41,26 @@ struct GradeList: View {
             }
             .safeAreaPadding()
             
+        }.onAppear {
+            updateData()
         }
         
+    }
+    
+    func updateData() {
+        Task.detached(){
+            
+            // Get grades
+            let gradesAux = await getGrades(token: token!, subjectId: userSubject.id!)
+            
+            await MainActor.run{
+                gradesAux!.forEach {
+                    grade in
+                    grades.append(grade)
+                }
+            }
+            
+        }
     }
     
 }
@@ -46,7 +68,7 @@ struct GradeList: View {
 #Preview {
     GradeList(userSubject:
         UserSubject(
-            id: 39275,
+            id: 39277,
             absences: 0,
             grading: 4.2,
             subjectClass: SubjectClass(

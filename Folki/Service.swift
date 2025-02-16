@@ -144,3 +144,79 @@ func getUserActivities(token: String) -> [Activity]? {
     }
     
 }
+
+func getGrades(token: String, subjectId: Int) -> [Grade]? {
+    
+    // Check Cache
+    /*
+    if let cacheResponse = Cache.shared.getCacheGetUserActivitiesResponse(forToken: token){
+        return cacheResponse.activities
+    }
+     */
+    
+    do {
+        let response = Just.get(url + "/subjects/\(subjectId)/grades", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let getGradesResponse: GetGradesResponse = try JSONDecoder().decode(GetGradesResponse.self, from: jsonData)
+        
+        // Cache the Response
+        //Cache.shared.setCacheGetUserActivitiesResponse(getUserActivitiesResponse, forToken: token)
+        
+        return getGradesResponse.grades
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}
+
+func getAbsences(token: String, subjectId: Int) -> [Absence]? {
+    
+    // Check Cache
+    /*
+    if let cacheResponse = Cache.shared.getCacheGetUserActivitiesResponse(forToken: token){
+        return cacheResponse.activities
+    }
+     */
+    
+    do {
+        let response = Just.get(url + "/subjects/\(subjectId)/absences", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let getAbsencesResponse: GetAbsencesResponse = try JSONDecoder().decode(GetAbsencesResponse.self, from: jsonData)
+        
+        // Cache the Response
+        //Cache.shared.setCacheGetUserActivitiesResponse(getUserActivitiesResponse, forToken: token)
+        
+        return getAbsencesResponse.absences
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}

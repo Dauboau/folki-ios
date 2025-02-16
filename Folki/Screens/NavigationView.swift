@@ -76,7 +76,7 @@ struct NavigationView: View {
                 .customizationID("com.myApp.absences")
                 
                 Tab("Notas", systemImage: "tray.full.fill") {
-                    Grade(userSubjects: userSubjects)
+                    Grades(userSubjects: userSubjects)
                 }
                 .customizationID("com.myApp.grades")
             }

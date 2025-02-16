@@ -9,7 +9,11 @@ import SwiftUI
 
 struct AbsenceList: View {
     
+    let token : String? = UserDefaults.standard.string(forKey: "token")
+    
     let userSubject : UserSubject
+    
+    @State var absences : [Absence] = []
     
     var body: some View {
         ZStack {
@@ -37,14 +41,34 @@ struct AbsenceList: View {
             }
             .safeAreaPadding()
             
+        }.onAppear {
+            updateData()
+        }
+        
+    }
+    
+    func updateData() {
+        Task.detached(){
+            
+            // Get grades
+            let absencesAux = await getAbsences(token: token!, subjectId: userSubject.id!)
+            
+            await MainActor.run{
+                absencesAux!.forEach {
+                    absence in
+                    absences.append(absence)
+                }
+            }
+            
         }
     }
+    
 }
 
 #Preview {
     AbsenceList(userSubject:
         UserSubject(
-            id: 39275,
+            id: 39274,
             absences: 0,
             grading: 4.2,
             subjectClass: SubjectClass(

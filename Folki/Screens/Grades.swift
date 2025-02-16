@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Grade: View {
+struct Grades: View {
     
     let userSubjects : [UserSubject]
     
@@ -69,7 +69,7 @@ struct Grade: View {
 }
 
 #Preview {
-    Grade(userSubjects:
+    Grades(userSubjects:
         [
             UserSubject(
                 id: 39275,

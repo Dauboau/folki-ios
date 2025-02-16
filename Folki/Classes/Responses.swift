@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LoginResponse: Decodable {
+class LoginResponse: Decodable {
     let token: String
 }
 
@@ -23,6 +23,15 @@ class GetUserActivitiesResponse: Decodable {
     let activities: [Activity]
 }
 
+class GetGradesResponse: Decodable {
+    let grades: [Grade]
+}
+
+class GetAbsencesResponse: Decodable {
+    let absences: [Absence]
+}
+
+
 class Cache {
     
     static let shared = Cache()
@@ -31,6 +40,8 @@ class Cache {
     private let cacheGetMeResponse = NSCache<NSString, GetMeResponse>()
     private let cacheGetUserSubjectsResponse = NSCache<NSString, GetUserSubjectsResponse>()
     private let cacheGetUserActivitiesResponse = NSCache<NSString, GetUserActivitiesResponse>()
+    private let cacheGetGradesResponse = NSCache<NSNumber, GetGradesResponse>()
+    private let cacheGetAbsencesResponse = NSCache<NSNumber, GetAbsencesResponse>()
     
     // User (GetMeResponse)
     func getCacheGetMeResponse(forToken token: String) -> GetMeResponse? {
@@ -54,6 +65,22 @@ class Cache {
     }
     func setCacheGetUserActivitiesResponse(_ getUserActivitiesResponse: GetUserActivitiesResponse, forToken token: String) {
         cacheGetUserActivitiesResponse.setObject(getUserActivitiesResponse, forKey: token as NSString)
+    }
+    
+    // [Grade] (GetGradesResponse)
+    func getCacheGetGradesResponse(forSubjectId subjectId: Int) -> GetGradesResponse? {
+        return cacheGetGradesResponse.object(forKey: subjectId as NSNumber)
+    }
+    func setCacheGetGradesResponse(_ getUserActivitiesResponse: GetGradesResponse, forSubjectId subjectId: Int) {
+        cacheGetGradesResponse.setObject(getUserActivitiesResponse, forKey: subjectId as NSNumber)
+    }
+    
+    // [Absence] (GetAbsencesResponse)
+    func getCacheGetAbsencesResponse(forSubjectId subjectId: Int) -> GetAbsencesResponse? {
+        return cacheGetAbsencesResponse.object(forKey: subjectId as NSNumber)
+    }
+    func setCacheGetAbsencesResponse(_ getAbsencesResponse: GetAbsencesResponse, forSubjectId subjectId: Int) {
+        cacheGetAbsencesResponse.setObject(getAbsencesResponse, forKey: subjectId as NSNumber)
     }
     
 }

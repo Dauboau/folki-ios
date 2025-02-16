@@ -24,7 +24,7 @@ let userSubjects : [UserSubject]
                     if selectedSegment == "Absences" {
                         Absences(userSubjects:userSubjects)
                     } else {
-                        Grade(userSubjects:userSubjects)
+                        Grades(userSubjects:userSubjects)
                     }
                     
                     Picker("Select View", selection: $selectedSegment) {
