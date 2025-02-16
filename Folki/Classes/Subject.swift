@@ -12,15 +12,14 @@ import SwiftData
 class UserSubject: Decodable, Equatable {
     
     // Properties
-    @Attribute(.unique) var id: Int?
-    var absences: Int?
-    var grading: Float?
+    @Attribute(.unique) var id: Int
+    var absences: Int
+    var grading: Float
     var subjectClass: SubjectClass
     var color: String
-    var observation: String?
 
     // Initializer
-    init(id: Int? = nil, absences: Int? = nil, grading: Float? = nil, subjectClass: SubjectClass, color: String? = nil, observation: String? = nil) {
+    init(id: Int, absences: Int, grading: Float, subjectClass: SubjectClass, color: String? = nil) {
         self.id = id
         self.absences = absences
         self.grading = grading
@@ -30,7 +29,6 @@ class UserSubject: Decodable, Equatable {
         }else{
             self.color = color ?? "#7500BC"
         }
-        self.observation = observation
     }
     
     // Equatable conformance
@@ -40,19 +38,18 @@ class UserSubject: Decodable, Equatable {
 
     // Decodable conformance
     enum CodingKeys: String, CodingKey {
-        case id, absences, grading, subjectClass, color, observation
+        case id, absences, grading, subjectClass, color
     }
 
     required convenience init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let id = try container.decodeIfPresent(Int.self, forKey: .id)
-        let absences = try container.decodeIfPresent(Int.self, forKey: .absences)
-        let grading = try container.decodeIfPresent(Float.self, forKey: .grading)
+        let id = try container.decode(Int.self, forKey: .id)
+        let absences = try container.decode(Int.self, forKey: .absences)
+        let grading = try container.decode(Float.self, forKey: .grading)
         let subjectClass = try container.decode(SubjectClass.self, forKey: .subjectClass)
         let color = try container.decodeIfPresent(String.self, forKey: .color)
-        let observation = try container.decodeIfPresent(String.self, forKey: .observation)
 
-        self.init(id: id, absences: absences, grading: grading, subjectClass: subjectClass, color: color, observation: observation)
+        self.init(id: id, absences: absences, grading: grading, subjectClass: subjectClass, color: color)
     }
     
     func update(userSubject : UserSubject){
@@ -61,7 +58,6 @@ class UserSubject: Decodable, Equatable {
         self.subjectClass.update(subjectClass: userSubject.subjectClass)
         //The colors should be preserved
         //self.color = userSubject.color
-        self.observation = userSubject.observation
     }
     
     private static func randomDarkColor() -> String {

@@ -15,6 +15,9 @@ struct CSS {
     static let paddingVerticalList:CGFloat = 5
     static let paddingVerticalScrollView:CGFloat = 2.5
     static let cornerRadius:CGFloat = 10
+    static let buttonTextPadding:CGFloat = 6
+    static let buttonCardPadding:CGFloat = 3
+    static let textCardPadding:CGFloat = 15
     
 }
 

@@ -216,7 +216,7 @@ struct WeekCard: View {
                         Spacer()
                     }
                     HStack {
-                        Text(String("\(userSubject.absences!) Faltas Cadastradas"))
+                        Text(String("\(userSubject.absences) Faltas Cadastradas"))
                             .foregroundColor(.white)
                         Spacer()
                     }

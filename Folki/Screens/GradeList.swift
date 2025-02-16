@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct GradeList: View {
     
@@ -13,7 +14,15 @@ struct GradeList: View {
     
     let userSubject : UserSubject
     
-    @State var grades : [Grade] = []
+    @Environment(\.modelContext) var context
+    @Query private var grades: [Grade]
+    
+    init(userSubject: UserSubject) {
+        self.userSubject = userSubject
+        
+        let userSubjectId:Int = userSubject.id
+        _grades = Query(filter: #Predicate { $0.userSubjectId == userSubjectId }, sort: \Grade.createdAt)
+    }
     
     var body: some View {
         ZStack {
@@ -38,6 +47,35 @@ struct GradeList: View {
                 }
                 .padding(.bottom,CSS.paddingBottomText)
                 
+                List{
+                    
+                    ForEach(grades) { grade in
+                        
+                        GradeListCard(grade)
+                            .swipeActions(edge: .trailing,allowsFullSwipe: false){
+                                Button("Excluir",systemImage: "minus.square.fill"){
+                                    
+                                    print("WIP - Deletar Nota")
+                                    
+                                    withAnimation(.snappy) {
+                                        context.delete(grade)
+                                    }
+                                    
+                                }
+                                .tint(Color("Primary_Red"))
+                            }
+                        
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .padding(.vertical, CSS.paddingVerticalList)
+                                            
+                }
+                .listStyle(.grouped)
+                .scrollContentBackground(.hidden)
+                .contentMargins(.vertical, 0)
+                
             }
             .safeAreaPadding()
             
@@ -51,13 +89,42 @@ struct GradeList: View {
         Task.detached(){
             
             // Get grades
-            let gradesAux = await getGrades(token: token!, subjectId: userSubject.id!)
+            let gradesAux = await getGrades(token: token!, subjectId: userSubject.id)
+            
+            if(gradesAux == nil){
+                return
+            }
             
             await MainActor.run{
-                gradesAux!.forEach {
-                    grade in
-                    grades.append(grade)
+                
+                #if DEBUG
+                print(Default.separator)
+                #endif
+                
+                // Inserting and Updating grades
+                for gradeAux in gradesAux! {
+                    
+                    var gradeFound = false
+                    for grade in grades {
+                        if(grade == gradeAux){
+                            #if DEBUG
+                            print("\(grade.name) updated!")
+                            #endif
+                            gradeFound = true
+                            grade.update(gradeAux)
+                            break
+                        }
+                    }
+                    
+                    if(!gradeFound){
+                        #if DEBUG
+                        print("\(gradeAux.name) created!")
+                        #endif
+                        context.insert(gradeAux)
+                    }
+                    
                 }
+                
             }
             
         }
@@ -85,4 +152,37 @@ struct GradeList: View {
             )
         )
     )
+    .modelContainer(for:Grade.self, inMemory: true)
+}
+
+struct GradeListCard: View {
+    
+    let grade: Grade
+    
+    init(_ grade: Grade) {
+        self.grade = grade
+    }
+    
+    var body: some View {
+        
+        HStack{
+            Text("\(grade.name) (\(Int(grade.percentage))%)")
+                .foregroundStyle(.white)
+                .bold()
+                .padding(.leading)
+                .lineLimit(1)
+            
+            Spacer()
+            
+            Text("\(String(format: "%.1f", grade.value))")
+                .foregroundStyle(.white)
+                .bold()
+                .padding(.trailing)
+            
+        }
+        .padding(.vertical,CSS.textCardPadding)
+        .background(Color("Gray_2"))
+        .cornerRadius(CSS.cornerRadius)
+        
+    }
 }

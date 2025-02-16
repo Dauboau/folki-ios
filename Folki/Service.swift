@@ -148,11 +148,9 @@ func getUserActivities(token: String) -> [Activity]? {
 func getGrades(token: String, subjectId: Int) -> [Grade]? {
     
     // Check Cache
-    /*
-    if let cacheResponse = Cache.shared.getCacheGetUserActivitiesResponse(forToken: token){
-        return cacheResponse.activities
+    if let cacheResponse = Cache.shared.getCacheGetGradesResponse(forSubjectId: subjectId){
+        return cacheResponse.grades
     }
-     */
     
     do {
         let response = Just.get(url + "/subjects/\(subjectId)/grades", headers: ["Authorization": "Bearer \(token)"])
@@ -172,7 +170,7 @@ func getGrades(token: String, subjectId: Int) -> [Grade]? {
         let getGradesResponse: GetGradesResponse = try JSONDecoder().decode(GetGradesResponse.self, from: jsonData)
         
         // Cache the Response
-        //Cache.shared.setCacheGetUserActivitiesResponse(getUserActivitiesResponse, forToken: token)
+        Cache.shared.setCacheGetGradesResponse(getGradesResponse, forSubjectId: subjectId)
         
         return getGradesResponse.grades
         
@@ -186,11 +184,9 @@ func getGrades(token: String, subjectId: Int) -> [Grade]? {
 func getAbsences(token: String, subjectId: Int) -> [Absence]? {
     
     // Check Cache
-    /*
-    if let cacheResponse = Cache.shared.getCacheGetUserActivitiesResponse(forToken: token){
-        return cacheResponse.activities
+    if let cacheResponse = Cache.shared.getCacheGetAbsencesResponse(forSubjectId: subjectId){
+        return cacheResponse.absences
     }
-     */
     
     do {
         let response = Just.get(url + "/subjects/\(subjectId)/absences", headers: ["Authorization": "Bearer \(token)"])
@@ -210,7 +206,7 @@ func getAbsences(token: String, subjectId: Int) -> [Absence]? {
         let getAbsencesResponse: GetAbsencesResponse = try JSONDecoder().decode(GetAbsencesResponse.self, from: jsonData)
         
         // Cache the Response
-        //Cache.shared.setCacheGetUserActivitiesResponse(getUserActivitiesResponse, forToken: token)
+        Cache.shared.setCacheGetAbsencesResponse(getAbsencesResponse, forSubjectId: subjectId)
         
         return getAbsencesResponse.absences
         

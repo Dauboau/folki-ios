@@ -110,9 +110,9 @@ struct SettingButton: View {
             Text("\(buttonText)")
                 .bold()
                 .frame(maxWidth: .infinity)
-                .padding(6)
+                .padding(CSS.buttonTextPadding)
         }
-        .padding(.vertical,3)
+        .padding(.vertical,CSS.buttonCardPadding)
         .buttonStyle(.borderedProminent)
         .tint(Color("Gray_2"))
         .controlSize(.regular)

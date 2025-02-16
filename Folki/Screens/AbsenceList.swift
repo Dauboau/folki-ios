@@ -23,7 +23,7 @@ struct AbsenceList: View {
             VStack {
                 
                 HStack{
-                    Text("\(userSubject.absences!) Faltas")
+                    Text("\(userSubject.absences) Faltas")
                         .font(.largeTitle)
                         .bold()
                         .foregroundColor(.white)
@@ -51,7 +51,7 @@ struct AbsenceList: View {
         Task.detached(){
             
             // Get grades
-            let absencesAux = await getAbsences(token: token!, subjectId: userSubject.id!)
+            let absencesAux = await getAbsences(token: token!, subjectId: userSubject.id)
             
             await MainActor.run{
                 absencesAux!.forEach {

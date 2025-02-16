@@ -108,7 +108,7 @@ struct Grades: View {
             UserSubject(
                 id: 391275,
                 absences: 4,
-                grading: nil,
+                grading: 0,
                 subjectClass: SubjectClass(
                     id: 21074,
                     availableDays: [
@@ -135,13 +135,10 @@ fileprivate struct GradeCard: View {
         ZStack {
             
             switch(userSubject.grading){
-                case .none:
-                    Color.primaryPurple
-                        .cornerRadius(CSS.cornerRadius)
-                case let grade where grade! >= 5:
+                case let grade where grade >= 5:
                     Color.primaryGreen
                         .cornerRadius(CSS.cornerRadius)
-                case let grade where grade! < 5:
+                case let grade where grade < 5:
                     Color.primaryRed
                         .cornerRadius(CSS.cornerRadius)
                 default:
@@ -160,12 +157,10 @@ fileprivate struct GradeCard: View {
                             .foregroundColor(.white)
                         Spacer()
                     }
-                    if(userSubject.grading != nil){
-                        HStack {
-                            Text(String("Total de \(userSubject.grading!) de 10.0"))
-                                .foregroundColor(.white)
-                            Spacer()
-                        }
+                    HStack {
+                        Text(String("Total de \(userSubject.grading) de 10.0"))
+                            .foregroundColor(.white)
+                        Spacer()
                     }
                 }
                 

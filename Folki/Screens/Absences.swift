@@ -149,7 +149,7 @@ fileprivate struct AbsencesCard: View {
                         Spacer()
                     }
                     HStack {
-                        Text(String("\(userSubject.absences!) Faltas Cadastradas"))
+                        Text(String("\(userSubject.absences) Faltas Cadastradas"))
                             .foregroundColor(.white)
                         Spacer()
                     }
