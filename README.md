@@ -19,3 +19,19 @@ Para o ecossistema Apple utilizamos Swift com a biblioteca SwiftUI. No mobile an
 ## Features
 
 <img width="934" alt="Folki3" src="https://github.com/user-attachments/assets/fab5198d-6ded-4849-ad96-c92a3f71c9a7" />
+
+## Atribuição
+
+O Folki é um projeto desenvolvido pelo USPCodelab Sanca e mantido por seus membros. O Folki-iOS é uma extensão que se integra ao sistema Folki, oferecendo uma experiência nativa para o ecossistema Apple. O projeto tem como objetivo ser adotado pelo time do Codelab para futuros aprimoramentos e novos desenvolvimentos.
+
+## Contato Folki
+
+Email => yfaria@usp.br ou uclsanca@gmail.com
+
+Telegram => @yfaria ou @Gotenery
+
+É ritmo de Codelab ;)
+
+## Contato Folki-iOS
+
+email => romanzinidaniel@usp.br
