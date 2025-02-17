@@ -12,6 +12,10 @@ Para o ecossistema Apple utilizamos Swift com a biblioteca SwiftUI. No mobile an
 
 <img width="1001" alt="Folki1" src="https://github.com/user-attachments/assets/ba31dda8-6501-44a0-b5e5-f4f6bc4da557" />
 
+## Fluxo do Usuário
+
 <img width="926" alt="Folki2" src="https://github.com/user-attachments/assets/7f6e0c9b-2de4-4b90-b8b5-74a8f22caf0d" />
+
+## Features
 
 <img width="934" alt="Folki3" src="https://github.com/user-attachments/assets/fab5198d-6ded-4849-ad96-c92a3f71c9a7" />
