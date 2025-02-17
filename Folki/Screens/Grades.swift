@@ -155,11 +155,13 @@ fileprivate struct GradeCard: View {
                             .font(.title2)
                             .bold()
                             .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                     }
                     HStack {
                         Text(String("Total de \(userSubject.grading) de 10.0"))
                             .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                     }
                 }

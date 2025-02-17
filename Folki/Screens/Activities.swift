@@ -229,18 +229,21 @@ struct ActivityCard: View {
                             .font(.title2)
                             .bold()
                             .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                     }
                     if(activity.subjectClass != nil){
                         HStack {
                             Text("\(activity.subjectClass?.subject.name ?? "")")
                                 .foregroundColor(.white)
+                                .multilineTextAlignment(.leading)
                             Spacer()
                         }
                     }
                     HStack {
                         Text(String("\(Int(activity.value) * 10)% da Nota - \(DateFormatter.localizedString(from: activity.getDeadlineDate()!, dateStyle: .short, timeStyle: .none))"))
                             .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                     }
                 }

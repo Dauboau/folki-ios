@@ -190,6 +190,26 @@ struct NavigationView: View {
                     
                 }
                 
+                // Deleting activities
+                for activity in activities {
+                    if(!activitiesAux!.contains(where: { $0 == activity })){
+                        #if DEBUG
+                        print("\(activity.name) deleted!")
+                        #endif
+                        context.delete(activity)
+                    }
+                }
+                
+                // Deleting userSubjects
+                for userSubject in userSubjects {
+                    if(!userSubjectsAux!.contains(where: { $0 == userSubject })){
+                        #if DEBUG
+                        print("\(userSubject.subjectClass.subject.name) deleted!")
+                        #endif
+                        context.delete(userSubject)
+                    }
+                }
+                
                 // Save to persist the user data
                 do {
                     try context.save()

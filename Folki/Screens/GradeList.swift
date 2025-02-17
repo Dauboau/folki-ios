@@ -199,6 +199,7 @@ struct GradeListCard: View {
                 .foregroundStyle(.white)
                 .bold()
                 .padding(.trailing)
+                .lineLimit(1)
         }
         .padding(.vertical,CSS.textCardPadding)
         .background(Color("Gray_2"))

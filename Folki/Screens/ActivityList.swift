@@ -46,9 +46,11 @@ struct ActivityList: View {
                     .bold()
                     .foregroundColor(.white)
                     .padding(.bottom,CSS.paddingBottomText)
+                    .multilineTextAlignment(.center)
                 
                 Text("\(activity.subjectClass?.subject.name ?? "") - \(String(format: "%.1f", activity.value)) Pontos")
                     .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
                 
                 Spacer()
                 

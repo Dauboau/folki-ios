@@ -213,11 +213,13 @@ struct WeekCard: View {
                     HStack {
                         Text("\(nextLessonAvailableDay?.start ?? "") - \(nextLessonAvailableDay?.end ?? "")")
                             .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                     }
                     HStack {
                         Text(String("\(userSubject.absences) Faltas Cadastradas"))
                             .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                     }
                 }

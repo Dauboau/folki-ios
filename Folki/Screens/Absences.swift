@@ -146,11 +146,13 @@ fileprivate struct AbsencesCard: View {
                             .font(.title2)
                             .bold()
                             .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                     }
                     HStack {
                         Text(String("\(userSubject.absences) Faltas Cadastradas"))
                             .foregroundColor(.white)
+                            .multilineTextAlignment(.leading)
                         Spacer()
                     }
                 }
