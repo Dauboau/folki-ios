@@ -88,7 +88,7 @@ struct NavigationView: View {
             .defaultVisibility(.hidden, for: .sidebar)
             
             Tab("Configurações", systemImage: "gearshape.fill") {
-                Settings()
+                Settings(user:user)
             }
             .customizationID("com.myApp.settings")
                 

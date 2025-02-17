@@ -11,6 +11,8 @@ import SwiftData
 
 struct Settings: View {
     
+    let user : User
+    
     @Environment(\.modelContext) var context
     
     var body: some View {
@@ -41,13 +43,24 @@ struct Settings: View {
                     
                     VStack {
                         
+                        /*
                         SettingButton(buttonText: "Contato", action: {
                             print("Contato")
                         })
+                         */
                         
-                        SettingButton(buttonText: "Atualizar Disciplinas", action: {
-                            print("Atualizar Disciplinas")
-                        })
+                        NavigationLink(destination:
+                            Login(university: "\(user.university!.slug)")
+                        ){
+                            Text("Atualizar Disciplinas")
+                                .bold()
+                                .frame(maxWidth: .infinity)
+                                .padding(CSS.buttonTextPadding)
+                        }
+                        .padding(.vertical,CSS.buttonCardPadding)
+                        .buttonStyle(.borderedProminent)
+                        .tint(Color("Gray_2"))
+                        .controlSize(.regular)
                         
                         SettingButton(buttonText: "Open Source", action: {
                             if let url = URL(string: "https://github.com/Dauboau/folki-ios.git") {
@@ -75,6 +88,8 @@ struct Settings: View {
                         SettingButton(buttonText: "Sair", action: {
                             try! context.delete(model: UserSubject.self)
                             try! context.delete(model: Activity.self)
+                            try! context.delete(model: Grade.self)
+                            try! context.delete(model: Absence.self)
                             // Deleting the user should be the last action
                             try! context.delete(model: User.self)
                         })
@@ -94,7 +109,7 @@ struct Settings: View {
 }
 
 #Preview {
-    Settings()
+    Settings(user: User(id: 6681, email: "romanzinidaniel@usp.br", name: "Daniel Contente Romanzini", instituteId: 32, courseId: 84, isVerified: nil, institute: nil, notificationId: nil, userVersion: nil, university: University(id: 1, name: "Universidade de São Paulo", slug: "USP")))
         .modelContainer(for:User.self, inMemory: true)
 }
 
