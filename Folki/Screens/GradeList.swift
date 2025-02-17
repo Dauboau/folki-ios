@@ -128,7 +128,9 @@ struct GradeList: View {
                 // Deleting grades
                 for grade in grades {
                     if(!gradesAux!.contains(where: { $0 == grade })){
+                        #if DEBUG
                         print("\(grade.name) deleted!")
+                        #endif
                         context.delete(grade)
                     }
                 }
@@ -190,14 +192,13 @@ struct GradeListCard: View {
                 .bold()
                 .padding(.leading)
                 .lineLimit(1)
-            
+                
             Spacer()
             
             Text("\(String(format: "%.1f", grade.value))")
                 .foregroundStyle(.white)
                 .bold()
                 .padding(.trailing)
-            
         }
         .padding(.vertical,CSS.textCardPadding)
         .background(Color("Gray_2"))

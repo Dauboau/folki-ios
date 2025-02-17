@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AbsenceList: View {
     
@@ -13,7 +14,8 @@ struct AbsenceList: View {
     
     let userSubject : UserSubject
     
-    @State var absences : [Absence] = []
+    @Environment(\.modelContext) var context
+    @Query private var absences: [Absence]
     
     var body: some View {
         ZStack {
@@ -38,6 +40,35 @@ struct AbsenceList: View {
                 }
                 .padding(.bottom,CSS.paddingBottomText)
                 
+                List{
+                    
+                    ForEach(absences) { absence in
+                        
+                        AbsenceListCard(absence)
+                            .swipeActions(edge: .trailing,allowsFullSwipe: false){
+                                Button("Excluir",systemImage: "minus.square.fill"){
+                                    
+                                    print("WIP - Deletar Nota")
+                                    
+                                    withAnimation(.snappy) {
+                                        context.delete(absence)
+                                    }
+                                    
+                                }
+                                .tint(Color("Primary_Red"))
+                            }
+                        
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
+                    .listRowSeparator(.hidden)
+                    .padding(.vertical, CSS.paddingVerticalList)
+                                            
+                }
+                .listStyle(.grouped)
+                .scrollContentBackground(.hidden)
+                .contentMargins(.vertical, 0)
+                
             }
             .safeAreaPadding()
             
@@ -50,14 +81,64 @@ struct AbsenceList: View {
     func updateData() {
         Task.detached(){
             
-            // Get grades
+            // Get absences
             let absencesAux = await getAbsences(token: token!, subjectId: userSubject.id)
             
+            if(absencesAux == nil){
+                return
+            }
+            
             await MainActor.run{
-                absencesAux!.forEach {
-                    absence in
-                    absences.append(absence)
+                
+            #if DEBUG
+            print(Default.separator)
+            #endif
+
+            // Inserting and Updating absences
+            for absenceAux in absencesAux! {
+                
+                var gradeFound = false
+                for absence in absences {
+                    if(absence == absenceAux){
+                        #if DEBUG
+                        print("\(absence.date) updated!")
+                        #endif
+                        gradeFound = true
+                        absence.update(absenceAux)
+                        break
+                    }
                 }
+                
+                if(!gradeFound){
+                    #if DEBUG
+                    print("\(absenceAux.date) created!")
+                    #endif
+                    context.insert(absenceAux)
+                }
+                
+            }
+
+            // Deleting absences
+            for absence in absences {
+                if(!absencesAux!.contains(where: { $0 == absence })){
+                    #if DEBUG
+                    print("\(absence.date) deleted!")
+                    #endif
+                    context.delete(absence)
+                }
+            }
+
+            // Save to persist the user data
+            do {
+                try context.save()
+            } catch {
+                print("Error saving context: \(error)")
+            }
+
+            #if DEBUG
+            print(Default.separator)
+            #endif
+                
             }
             
         }
@@ -69,7 +150,7 @@ struct AbsenceList: View {
     AbsenceList(userSubject:
         UserSubject(
             id: 39274,
-            absences: 0,
+            absences: 2,
             grading: 4.2,
             subjectClass: SubjectClass(
                 id: 21074,
@@ -85,4 +166,30 @@ struct AbsenceList: View {
             )
         )
     )
+    .modelContainer(for:Absence.self, inMemory: true)
+}
+
+struct AbsenceListCard: View {
+    
+    let absence: Absence
+    
+    init(_ absence: Absence) {
+        self.absence = absence
+    }
+    
+    var body: some View {
+        
+        HStack{
+            Text("\(absence.getDate()!.formatted(date: .abbreviated, time: .omitted))")
+                .foregroundStyle(.white)
+                .bold()
+                .padding(.leading)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity)
+        }
+        .padding(.vertical,CSS.textCardPadding)
+        .background(Color("Gray_2"))
+        .cornerRadius(CSS.cornerRadius)
+        
+    }
 }

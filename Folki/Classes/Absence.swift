@@ -39,8 +39,15 @@ class Absence: Decodable,Equatable {
         self.init(id: id, date: date)
     }
     
-    func update(absence: Absence) {
+    func update(_ absence: Absence) {
         self.date = absence.date
+    }
+    
+    func getDate() -> Date? {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        return isoFormatter.date(from: self.date)
     }
     
 }
