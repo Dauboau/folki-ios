@@ -259,19 +259,43 @@ struct ActivityCard: View {
 
 fileprivate struct SwipeCheck: View {
     
+    let token : String? = UserDefaults.standard.string(forKey: "token")
+    
     let activity : Activity
     
     var body: some View {
         
         Button("Concluir",systemImage: "checkmark.square.fill"){
-            print("WIP - Concluir Atividade")
             
             withAnimation(.snappy) {
-                activity.checked = true
+                checkData(activity)
             }
         }
         .tint(Color("Primary_Green"))
         
+    }
+    
+    func checkData(_ activity: Activity){
+        Task.detached(){
+            
+            // Check Activity
+            let checkAux = checkActivity(token: token!,activity: activity)
+            
+            if(checkAux == nil){
+                return
+            }
+            
+            await MainActor.run{
+                
+                #if DEBUG
+                print("\(activity.name) checked!")
+                #endif
+                
+                activity.checked = true
+                
+            }
+            
+        }
     }
     
 }
@@ -339,12 +363,13 @@ fileprivate struct SwipeRestore: View {
 
 fileprivate struct SwipeUncheck: View {
     
+    let token : String? = UserDefaults.standard.string(forKey: "token")
+    
     let activity : Activity
     
     var body: some View {
         
         Button("Desfazer",systemImage: "arrow.uturn.backward.square.fill"){
-            print("WIP - Desfazer Conclusão")
             
             withAnimation(.snappy) {
                 activity.checked = false
@@ -352,6 +377,29 @@ fileprivate struct SwipeUncheck: View {
         }
         .tint(Color("Gray_2"))
         
+    }
+    
+    func uncheckData(_ activity: Activity){
+        Task.detached(){
+            
+            // Uncheck Activity
+            let uncheckAux = uncheckActivity(token: token!,activity: activity)
+            
+            if(uncheckAux == nil){
+                return
+            }
+            
+            await MainActor.run{
+                
+                #if DEBUG
+                print("\(activity.name) unchecked!")
+                #endif
+                
+                activity.checked = false
+                
+            }
+            
+        }
     }
     
 }

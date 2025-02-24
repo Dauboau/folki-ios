@@ -102,13 +102,6 @@ struct GradeList: View {
                     
                     context.delete(grade)
                     
-                    // Save to persist the user data
-                    do {
-                        try context.save()
-                    } catch {
-                        print("Error saving context: \(error)")
-                    }
-                    
                 }
             }
         

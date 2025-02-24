@@ -95,13 +95,6 @@ struct AbsenceList: View {
                     
                     context.delete(absence)
                     
-                    // Save to persist the user data
-                    do {
-                        try context.save()
-                    } catch {
-                        print("Error saving context: \(error)")
-                    }
-                    
                 }
             }
         

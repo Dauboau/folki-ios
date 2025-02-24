@@ -280,3 +280,65 @@ func deleteGrade(token: String, grade: Grade) -> Bool? {
     }
     
 }
+
+func checkActivity(token: String, activity: Activity) -> Check? {
+    
+    do {
+        let response = Just.post(url + "/activities/\(activity.id)/check", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let checkActivityResponse: CheckActivityResponse = try JSONDecoder().decode(CheckActivityResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetUserActivitiesResponse(forToken: token)
+        
+        return checkActivityResponse.check
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}
+
+func uncheckActivity(token: String, activity: Activity) -> Activity? {
+    
+    do {
+        let response = Just.delete(url + "/activities/\(activity.id)/check", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let uncheckActivityResponse: UncheckActivityResponse = try JSONDecoder().decode(UncheckActivityResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetUserActivitiesResponse(forToken: token)
+        
+        return uncheckActivityResponse.activity
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}

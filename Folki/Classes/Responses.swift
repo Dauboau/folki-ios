@@ -39,6 +39,14 @@ class DeleteGradeResponse: Decodable {
     let succesful: Bool
 }
 
+class CheckActivityResponse: Decodable {
+    let check: Check
+}
+
+class UncheckActivityResponse: Decodable {
+    let activity: Activity
+}
+
 class Cache {
     
     static let shared = Cache()

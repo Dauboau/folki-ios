@@ -184,3 +184,9 @@ class Activity: Decodable, Equatable {
     }
     
 }
+
+struct Check : Decodable{
+    var userId : Int
+    var activityId : Int
+    var createdAt : String
+}
