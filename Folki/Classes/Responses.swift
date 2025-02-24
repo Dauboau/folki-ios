@@ -55,6 +55,10 @@ class RestoreActivityResponse: Decodable {
     let succesful: Bool
 }
 
+class AddAbsenceResponse: Decodable {
+    let succesful: Bool
+}
+
 class Cache {
     
     static let shared = Cache()

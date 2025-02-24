@@ -408,3 +408,43 @@ func restoreActivity(token: String, activity: Activity) -> Bool? {
     }
     
 }
+
+func addAbsence(token: String, subjectId: Int, date: Date) -> Bool? {
+    
+    let isoFormatter = ISO8601DateFormatter()
+    isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    let dateISO: String = isoFormatter.string(from: date)
+    
+    let body: [String: Any?] = [
+        "date": dateISO
+    ]
+    
+    do {
+        let response = Just.post(url + "/subjects/\(subjectId)/absences", json: body, headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let addAbsenceResponse: AddAbsenceResponse = try JSONDecoder().decode(AddAbsenceResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetAbsencesResponse(forSubjectId: subjectId)
+        Cache.shared.invalidateCacheGetUserSubjectsResponse(forToken: token)
+        
+        return addAbsenceResponse.succesful
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}

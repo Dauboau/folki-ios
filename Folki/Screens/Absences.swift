@@ -9,6 +9,8 @@ import SwiftUI
 
 struct Absences: View {
     
+    @State private var addAbsenceSubject: UserSubject?
+    
     let userSubjects : [UserSubject]
     
     var body: some View {
@@ -44,7 +46,11 @@ struct Absences: View {
                             AbsencesCard(userSubject:userSubject)
                                 .swipeActions(edge: .leading,allowsFullSwipe: true){
                                     Button("Adicionar Falta",systemImage: "plus.square"){
+                                        
                                         print("WIP - Adicionar Falta")
+                                        
+                                        addAbsenceSubject = userSubject
+                                        
                                     }
                                     .tint(Color("Gray_2"))
                                 }
@@ -54,11 +60,15 @@ struct Absences: View {
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
                         .padding(.vertical, CSS.paddingVerticalList)
-                                                
+                        
                     }
                     .listStyle(.grouped)
                     .scrollContentBackground(.hidden)
                     .contentMargins(.vertical, 0)
+                    
+                    .sheet(item: $addAbsenceSubject){userSubject in
+                        addAbsenceSheet(userSubject: userSubject)
+                    }
                     
                 }
                 .safeAreaPadding()
@@ -163,4 +173,79 @@ fileprivate struct AbsencesCard: View {
             
         }
     }
+}
+
+fileprivate struct addAbsenceSheet: View {
+    
+    let token : String? = UserDefaults.standard.string(forKey: "token")
+    
+    let userSubject : UserSubject
+    
+    @State private var date = Date()
+    
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        
+        ZStack{
+            
+            DefaultBackground()
+            
+            VStack{
+                
+                Text("Adicionar Falta")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding(CSS.paddingBottomText)
+                
+                DatePicker("Data da Falta", selection: $date, displayedComponents: [.date])
+                    .datePickerStyle(.graphical)
+                    .foregroundColor(.white)
+                    .environment(\.colorScheme, .dark)
+                
+                HStack{
+                    Button(action: {
+                        addData(userSubject,date)
+                    }) {
+                        Text("Adicionar")
+                            .frame(maxWidth: CSS.maxWidth)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.primaryPurple)
+                    .controlSize(.regular)
+                    .padding(.top,20)
+                }
+            }
+            .safeAreaPadding()
+            
+        }
+        
+    }
+    
+    func addData(_ userSubject: UserSubject, _ date: Date){
+        Task.detached(){
+            
+            // Add Absence
+            let addAbsenceAux = addAbsence(token: token!,subjectId: userSubject.id,date: date)
+            
+            if(addAbsenceAux == nil){
+                return
+            }
+            
+            if(addAbsenceAux!){
+                await MainActor.run{
+                    #if DEBUG
+                    print("\(userSubject.subjectClass.subject.name) absence added!")
+                    #endif
+                    
+                    // Dismiss Sheet
+                    dismiss()
+                    
+                }
+            }
+            
+        }
+    }
+    
 }
