@@ -46,7 +46,6 @@ struct Grades: View {
                             GradeCard(userSubject:userSubject)
                                 .swipeActions(edge: .leading,allowsFullSwipe: true){
                                     Button("Adicionar",systemImage: "plus.square"){
-                                        print("WIP - Adicionar Nota")
                                         addGradeSubject = userSubject
                                     }
                                     .tint(Color("Gray_2"))
