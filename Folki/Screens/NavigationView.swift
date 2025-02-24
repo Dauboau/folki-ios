@@ -22,10 +22,6 @@ struct NavigationView: View {
     // Atividades ordenadas pela data de entrega
     @Query(sort: \Activity.finishDate) private var activities: [Activity]
     
-    // Faltas e Notas
-    @Query() private var abscences: [Absence]
-    @Query() private var grades: [Grade]
-    
     // Tab View
     @AppStorage("customization") private var customization: TabViewCustomization = TabViewCustomization()
     init() {
@@ -102,14 +98,6 @@ struct NavigationView: View {
         .tabViewCustomization($customization)
         .tint(Color("Primary_Purple"))
         .onAppear {
-            updateData()
-        }
-        
-        // Track Changes
-        .onChange(of: abscences){
-            updateData()
-        }
-        .onChange(of: grades){
             updateData()
         }
         

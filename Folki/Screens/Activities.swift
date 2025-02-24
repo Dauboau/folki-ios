@@ -372,7 +372,7 @@ fileprivate struct SwipeUncheck: View {
         Button("Desfazer",systemImage: "arrow.uturn.backward.square.fill"){
             
             withAnimation(.snappy) {
-                activity.checked = false
+                uncheckData(activity)
             }
         }
         .tint(Color("Gray_2"))
