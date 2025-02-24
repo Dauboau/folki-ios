@@ -32,6 +32,11 @@ struct Activities: View {
                             .bold()
                             .foregroundColor(.white)
                         Spacer()
+                        Button("Adicionar Atividade",systemImage: "plus"){
+                            print("WIP - Adicionar Atividade")
+                        }
+                        .labelStyle(.iconOnly)
+                        .tint(.white)
                     }
                     .padding(.bottom,CSS.paddingBottomText)
                     
