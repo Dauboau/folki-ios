@@ -216,3 +216,67 @@ func getAbsences(token: String, subjectId: Int) -> [Absence]? {
     }
     
 }
+
+func deleteAbsence(token: String, absence: Absence) -> Bool? {
+    
+    do {
+        let response = Just.delete(url + "/absences/\(absence.id)", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let deleteAbsenceResponse: DeleteAbsenceResponse = try JSONDecoder().decode(DeleteAbsenceResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetAbsencesResponse(forSubjectId: absence.userSubjectId)
+        Cache.shared.invalidateCacheGetUserSubjectsResponse(forToken: token)
+        
+        return deleteAbsenceResponse.succesful
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}
+
+func deleteGrade(token: String, grade: Grade) -> Bool? {
+    
+    do {
+        let response = Just.delete(url + "/grades/\(grade.id)", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let deleteGradeResponse: DeleteGradeResponse = try JSONDecoder().decode(DeleteGradeResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetGradesResponse(forSubjectId: grade.userSubjectId)
+        Cache.shared.invalidateCacheGetUserSubjectsResponse(forToken: token)
+        
+        return deleteGradeResponse.succesful
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}

@@ -48,10 +48,8 @@ struct AbsenceList: View {
                             .swipeActions(edge: .trailing,allowsFullSwipe: false){
                                 Button("Excluir",systemImage: "minus.square.fill"){
                                     
-                                    print("WIP - Deletar Nota")
-                                    
                                     withAnimation(.snappy) {
-                                        context.delete(absence)
+                                        deleteData(absence)
                                     }
                                     
                                 }
@@ -78,6 +76,38 @@ struct AbsenceList: View {
         
     }
     
+    func deleteData(_ absence: Absence){
+        Task.detached(){
+            
+            // Delete absence
+            let succesfulAux = deleteAbsence(token: token!,absence: absence)
+            
+            if(succesfulAux == nil){
+                return
+            }
+            
+            if(succesfulAux!){
+                await MainActor.run{
+                    
+                    #if DEBUG
+                    print("\(absence.date) deleted!")
+                    #endif
+                    
+                    context.delete(absence)
+                    
+                    // Save to persist the user data
+                    do {
+                        try context.save()
+                    } catch {
+                        print("Error saving context: \(error)")
+                    }
+                    
+                }
+            }
+        
+        }
+    }
+    
     func updateData() {
         Task.detached(){
             
@@ -97,19 +127,19 @@ struct AbsenceList: View {
             // Inserting and Updating absences
             for absenceAux in absencesAux! {
                 
-                var gradeFound = false
+                var absenceFound = false
                 for absence in absences {
                     if(absence == absenceAux){
                         #if DEBUG
                         print("\(absence.date) updated!")
                         #endif
-                        gradeFound = true
+                        absenceFound = true
                         absence.update(absenceAux)
                         break
                     }
                 }
                 
-                if(!gradeFound){
+                if(!absenceFound){
                     #if DEBUG
                     print("\(absenceAux.date) created!")
                     #endif

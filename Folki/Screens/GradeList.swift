@@ -55,10 +55,8 @@ struct GradeList: View {
                             .swipeActions(edge: .trailing,allowsFullSwipe: false){
                                 Button("Excluir",systemImage: "minus.square.fill"){
                                     
-                                    print("WIP - Deletar Nota")
-                                    
                                     withAnimation(.snappy) {
-                                        context.delete(grade)
+                                        deleteData(grade)
                                     }
                                     
                                 }
@@ -83,6 +81,38 @@ struct GradeList: View {
             updateData()
         }
         
+    }
+    
+    func deleteData(_ grade: Grade){
+        Task.detached(){
+            
+            // Delete absence
+            let succesfulAux = deleteGrade(token: token!,grade: grade)
+            
+            if(succesfulAux == nil){
+                return
+            }
+            
+            if(succesfulAux!){
+                await MainActor.run{
+                    
+                    #if DEBUG
+                    print("\(grade.name) deleted!")
+                    #endif
+                    
+                    context.delete(grade)
+                    
+                    // Save to persist the user data
+                    do {
+                        try context.save()
+                    } catch {
+                        print("Error saving context: \(error)")
+                    }
+                    
+                }
+            }
+        
+        }
     }
     
     func updateData() {

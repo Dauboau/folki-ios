@@ -31,6 +31,13 @@ class GetAbsencesResponse: Decodable {
     let absences: [Absence]
 }
 
+class DeleteAbsenceResponse: Decodable {
+    let succesful: Bool
+}
+
+class DeleteGradeResponse: Decodable {
+    let succesful: Bool
+}
 
 class Cache {
     
@@ -50,6 +57,9 @@ class Cache {
     func setCacheGetMeResponse(_ getMeResponse: GetMeResponse, forToken token: String) {
         cacheGetMeResponse.setObject(getMeResponse, forKey: token as NSString)
     }
+    func invalidateCacheGetMeResponse(forToken token: String) -> Void {
+        return cacheGetMeResponse.removeObject(forKey: token as NSString)
+    }
     
     // [UserSubject] (GetUserSubjectsResponse)
     func getCacheGetUserSubjectsResponse(forToken token: String) -> GetUserSubjectsResponse? {
@@ -57,6 +67,9 @@ class Cache {
     }
     func setCacheGetUserSubjectsResponse(_ getUserSubjectsResponse: GetUserSubjectsResponse, forToken token: String) {
         cacheGetUserSubjectsResponse.setObject(getUserSubjectsResponse, forKey: token as NSString)
+    }
+    func invalidateCacheGetUserSubjectsResponse(forToken token: String) -> Void {
+        return cacheGetUserSubjectsResponse.removeObject(forKey: token as NSString)
     }
     
     // [Activity] (GetUserActivitiesResponse)
@@ -66,6 +79,9 @@ class Cache {
     func setCacheGetUserActivitiesResponse(_ getUserActivitiesResponse: GetUserActivitiesResponse, forToken token: String) {
         cacheGetUserActivitiesResponse.setObject(getUserActivitiesResponse, forKey: token as NSString)
     }
+    func invalidateCacheGetUserActivitiesResponse(forToken token: String) -> Void {
+        return cacheGetUserActivitiesResponse.removeObject(forKey: token as NSString)
+    }
     
     // [Grade] (GetGradesResponse)
     func getCacheGetGradesResponse(forSubjectId subjectId: Int) -> GetGradesResponse? {
@@ -74,6 +90,9 @@ class Cache {
     func setCacheGetGradesResponse(_ getUserActivitiesResponse: GetGradesResponse, forSubjectId subjectId: Int) {
         cacheGetGradesResponse.setObject(getUserActivitiesResponse, forKey: subjectId as NSNumber)
     }
+    func invalidateCacheGetGradesResponse(forSubjectId subjectId: Int) -> Void? {
+        return cacheGetGradesResponse.removeObject(forKey: subjectId as NSNumber)
+    }
     
     // [Absence] (GetAbsencesResponse)
     func getCacheGetAbsencesResponse(forSubjectId subjectId: Int) -> GetAbsencesResponse? {
@@ -81,6 +100,9 @@ class Cache {
     }
     func setCacheGetAbsencesResponse(_ getAbsencesResponse: GetAbsencesResponse, forSubjectId subjectId: Int) {
         cacheGetAbsencesResponse.setObject(getAbsencesResponse, forKey: subjectId as NSNumber)
+    }
+    func invalidateCacheGetAbsencesResponse(forSubjectId subjectId: Int) -> Void {
+        return cacheGetAbsencesResponse.removeObject(forKey: subjectId as NSNumber)
     }
     
 }
