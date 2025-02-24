@@ -342,3 +342,69 @@ func uncheckActivity(token: String, activity: Activity) -> Activity? {
     }
     
 }
+
+func deleteActivity(token: String, activity: Activity) -> Bool? {
+    
+    do {
+        let response = Just.delete(url + "/activities/\(activity.id)", headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let deleteActivityResponse: DeleteActivityResponse = try JSONDecoder().decode(DeleteActivityResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetUserActivitiesResponse(forToken: token)
+        
+        return deleteActivityResponse.succesful
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}
+
+func restoreActivity(token: String, activity: Activity) -> Bool? {
+    
+    let body: [String: Any?] = [
+        "deletedAt": nil
+    ]
+    
+    do {
+        let response = Just.patch(url + "/activities/\(activity.id)", json: body, headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let restoreActivityResponse: RestoreActivityResponse = try JSONDecoder().decode(RestoreActivityResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetUserActivitiesResponse(forToken: token)
+        
+        return restoreActivityResponse.succesful
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}

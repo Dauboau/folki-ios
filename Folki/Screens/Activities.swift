@@ -317,21 +317,16 @@ fileprivate struct SwipeEdit: View {
 
 fileprivate struct SwipeDelete: View {
     
+    let token : String? = UserDefaults.standard.string(forKey: "token")
+    
     let activity : Activity
     
     var body: some View {
         
         Button("Excluir",systemImage: "minus.square.fill"){
-            print("WIP - Excluir Atividade")
-            
-            let isoFormatter = ISO8601DateFormatter()
-            isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
-            let currentDate = Date()
-            let currentDateISO = isoFormatter.string(from: currentDate)
             
             withAnimation(.snappy) {
-                activity.deletedAt = currentDateISO
+                deleteData(activity)
             }
             
         }
@@ -339,24 +334,82 @@ fileprivate struct SwipeDelete: View {
         
     }
     
+    func deleteData(_ activity: Activity){
+        Task.detached(){
+            
+            // Delete Activity
+            let deleteAux = deleteActivity(token: token!,activity: activity)
+            
+            if(deleteAux == nil){
+                return
+            }
+            
+            if(deleteAux!){
+                await MainActor.run{
+                    
+                    #if DEBUG
+                    print("\(activity.name) deleted!")
+                    #endif
+                    
+                    let isoFormatter = ISO8601DateFormatter()
+                    isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                    
+                    let currentDate = Date()
+                    let currentDateISO = isoFormatter.string(from: currentDate)
+                    
+                    activity.deletedAt = currentDateISO
+                    
+                }
+            }
+            
+        }
+    }
+    
 }
 
 fileprivate struct SwipeRestore: View {
+    
+    let token : String? = UserDefaults.standard.string(forKey: "token")
     
     let activity : Activity
     
     var body: some View {
         
         Button("Restaurar",systemImage: "arrow.circlepath"){
-            print("WIP - Restaurar Atividade")
+
             
             withAnimation(.snappy) {
-                activity.deletedAt = nil
+                restoreData(activity)
             }
             
         }
         .tint(Color("Gray_2"))
         
+    }
+    
+    func restoreData(_ activity: Activity){
+        Task.detached(){
+            
+            // Delete Activity
+            let restoreAux = restoreActivity(token: token!,activity: activity)
+            
+            if(restoreAux == nil){
+                return
+            }
+            
+            if(restoreAux!){
+                await MainActor.run{
+                    
+                    #if DEBUG
+                    print("\(activity.name) restored!")
+                    #endif
+                    
+                    activity.deletedAt = nil
+                    
+                }
+            }
+            
+        }
     }
     
 }

@@ -47,6 +47,14 @@ class UncheckActivityResponse: Decodable {
     let activity: Activity
 }
 
+class DeleteActivityResponse: Decodable {
+    let succesful: Bool
+}
+
+class RestoreActivityResponse: Decodable {
+    let succesful: Bool
+}
+
 class Cache {
     
     static let shared = Cache()
