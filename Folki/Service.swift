@@ -448,3 +448,42 @@ func addAbsence(token: String, subjectId: Int, date: Date) -> Bool? {
     }
     
 }
+
+func addGrade(token: String, subjectId: Int, name: String, percentage: Float, value: Float) -> Bool? {
+    
+    let body: [String: Any?] = [
+        "name": name,
+        "percentage": percentage,
+        "userSubjectId": subjectId,
+        "value": value
+    ]
+    
+    do {
+        let response = Just.post(url + "/grades", json: body, headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let addGradeResponse: AddGradeResponse = try JSONDecoder().decode(AddGradeResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetGradesResponse(forSubjectId: subjectId)
+        Cache.shared.invalidateCacheGetUserSubjectsResponse(forToken: token)
+        
+        return addGradeResponse.succesful
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}

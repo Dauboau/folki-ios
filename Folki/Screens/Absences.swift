@@ -45,12 +45,8 @@ struct Absences: View {
                             
                             AbsencesCard(userSubject:userSubject)
                                 .swipeActions(edge: .leading,allowsFullSwipe: true){
-                                    Button("Adicionar Falta",systemImage: "plus.square"){
-                                        
-                                        print("WIP - Adicionar Falta")
-                                        
+                                    Button("Adicionar Falta",systemImage: "plus.square"){               
                                         addAbsenceSubject = userSubject
-                                        
                                     }
                                     .tint(Color("Gray_2"))
                                 }

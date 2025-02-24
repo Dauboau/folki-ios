@@ -9,6 +9,8 @@ import SwiftUI
 
 struct Grades: View {
     
+    @State private var addGradeSubject: UserSubject?
+    
     let userSubjects : [UserSubject]
     
     var body: some View {
@@ -45,6 +47,7 @@ struct Grades: View {
                                 .swipeActions(edge: .leading,allowsFullSwipe: true){
                                     Button("Adicionar",systemImage: "plus.square"){
                                         print("WIP - Adicionar Nota")
+                                        addGradeSubject = userSubject
                                     }
                                     .tint(Color("Gray_2"))
                                 }
@@ -59,6 +62,11 @@ struct Grades: View {
                     .listStyle(.grouped)
                     .scrollContentBackground(.hidden)
                     .contentMargins(.vertical, 0)
+                    
+                    .sheet(item: $addGradeSubject){userSubject in
+                        addGradeSheet(userSubject: userSubject)
+                    }
+                    
                 }
                 .safeAreaPadding()
                 
@@ -173,4 +181,102 @@ fileprivate struct GradeCard: View {
         }
         
     }
+}
+
+fileprivate struct addGradeSheet: View {
+    
+    let token : String? = UserDefaults.standard.string(forKey: "token")
+    
+    let userSubject : UserSubject
+    
+    @State private var activityName = ""
+    @State private var finalGradePercentage = ""
+    @State private var grade = ""
+    @State private var errorFlag: Bool = false
+    
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        
+        ZStack{
+            
+            DefaultBackground()
+            
+            VStack{
+                
+                Text("Adicionar Nota")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding(CSS.paddingBottomText)
+                
+                TextField("Nome da Atividade (P1, P2, etc.)", text: $activityName)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(CSS.paddingBottomText)
+                
+                TextField("Porcentagem na Nota Final (0 a 100)", text: $finalGradePercentage)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(CSS.paddingBottomText)
+                
+                TextField("Nota da Atividade (0 a 10)", text: $grade)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(CSS.paddingBottomText)
+                
+                HStack{
+                    Button(action: {
+                        
+                        if(activityName.isEmpty || finalGradePercentage.isEmpty || grade.isEmpty){
+                            errorFlag = true
+                            return
+                        }
+                        
+                        addData(userSubject, activityName, Float(finalGradePercentage) ?? 0, Float(grade) ?? 0)
+                    }) {
+                        Text("Adicionar")
+                            .frame(maxWidth: CSS.maxWidth)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.primaryPurple)
+                    .controlSize(.regular)
+                    .padding(.top,20)
+                }
+                
+                .alert("Erro de Preenchimento", isPresented: $errorFlag, actions: {
+                    Button("Tentar Novamente") {}
+                }, message: {
+                    Text("Por favor preencha todos os campos.")
+                })
+                
+            }
+            .safeAreaPadding()
+            
+        }
+        
+    }
+    
+    func addData(_ userSubject: UserSubject, _ name: String, _ finalGradePercentage: Float, _ grade: Float){
+        Task.detached(){
+            
+            // Add Absence
+            let addGradeAux = addGrade(token: token!,subjectId: userSubject.id,name: name,percentage: finalGradePercentage,value: grade)
+            
+            if(addGradeAux == nil){
+                return
+            }
+            
+            if(addGradeAux!){
+                await MainActor.run{
+                    #if DEBUG
+                    print("\(userSubject.subjectClass.subject.name) grade added!")
+                    #endif
+                    
+                    // Dismiss Sheet
+                    dismiss()
+                    
+                }
+            }
+            
+        }
+    }
+    
 }

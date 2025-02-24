@@ -59,6 +59,10 @@ class AddAbsenceResponse: Decodable {
     let succesful: Bool
 }
 
+class AddGradeResponse: Decodable {
+    let succesful: Bool
+}
+
 class Cache {
     
     static let shared = Cache()
