@@ -194,6 +194,7 @@ fileprivate struct AddGradeSheet: View {
     @State private var errorFlag: Bool = false
     
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var dataValidity: Cache.Validity
     
     var body: some View {
         
@@ -268,6 +269,9 @@ fileprivate struct AddGradeSheet: View {
                     #if DEBUG
                     print("\(userSubject.subjectClass.subject.name) grade added!")
                     #endif
+                    
+                    // Triggers Reload of Data
+                    dataValidity.valid = false
                     
                     // Dismiss Sheet
                     dismiss()

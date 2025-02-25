@@ -16,6 +16,7 @@ struct GradeList: View {
     
     @Environment(\.modelContext) var context
     @Query private var grades: [Grade]
+    @EnvironmentObject var dataValidity: Cache.Validity
     
     init(userSubject: UserSubject) {
         self.userSubject = userSubject
@@ -101,6 +102,9 @@ struct GradeList: View {
                     #endif
                     
                     context.delete(grade)
+                    
+                    // Triggers Reload of Data
+                    dataValidity.valid = false
                     
                 }
             }

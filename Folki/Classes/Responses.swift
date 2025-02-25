@@ -70,6 +70,11 @@ class AddActivityResponse: Decodable {
 class Cache {
     
     static let shared = Cache()
+    
+    class Validity: ObservableObject {
+        @Published var valid: Bool = false // Defaults to False
+    }
+    
     private init() {}
     
     private let cacheGetMeResponse = NSCache<NSString, GetMeResponse>()

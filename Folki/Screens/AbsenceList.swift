@@ -29,6 +29,7 @@ struct AbsenceList: View {
                         .font(.largeTitle)
                         .bold()
                         .foregroundColor(.white)
+                        .contentTransition(.numericText())
                     Spacer()
                 }
                 .padding(.bottom,CSS.paddingBottomText)
@@ -94,6 +95,9 @@ struct AbsenceList: View {
                     #endif
                     
                     context.delete(absence)
+                    withAnimation {
+                        userSubject.absences = userSubject.absences - 1
+                    }
                     
                 }
             }

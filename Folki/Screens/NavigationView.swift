@@ -22,6 +22,8 @@ struct NavigationView: View {
     // Atividades ordenadas pela data de entrega
     @Query(sort: \Activity.finishDate) private var activities: [Activity]
     
+    @StateObject var dataValidity = Cache.Validity()
+    
     // Tab View
     @AppStorage("customization") private var customization: TabViewCustomization = TabViewCustomization()
     init() {
@@ -97,8 +99,15 @@ struct NavigationView: View {
         .tabViewStyle(.sidebarAdaptable)
         .tabViewCustomization($customization)
         .tint(Color("Primary_Purple"))
-        .onAppear {
-            updateData()
+        
+        .environmentObject(dataValidity)
+        
+        // Loads and Reloads data on demand (if invalid)
+        .onChange(of: dataValidity.valid,initial: true){
+            if(dataValidity.valid == false){
+                updateData()
+                dataValidity.valid = true
+            }
         }
         
     }

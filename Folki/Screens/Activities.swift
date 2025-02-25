@@ -50,6 +50,7 @@ struct Activities: View {
                     HStack{
                         Text("\(activities.count{$0.checked != true && $0.deletedAt == nil && $0.isLate() == false}) Atividade(s) Restante(s)!")
                             .foregroundColor(.white)
+                            .contentTransition(.numericText())
                         Spacer()
                     }
                     .padding(.bottom,CSS.paddingBottomText)
@@ -338,7 +339,9 @@ fileprivate struct SwipeCheck: View {
                 print("\(activity.name) checked!")
                 #endif
                 
-                activity.checked = true
+                withAnimation {
+                    activity.checked = true
+                }
                 
             }
             
@@ -404,7 +407,9 @@ fileprivate struct SwipeDelete: View {
                     let currentDate = Date()
                     let currentDateISO = isoFormatter.string(from: currentDate)
                     
-                    activity.deletedAt = currentDateISO
+                    withAnimation {
+                        activity.deletedAt = currentDateISO
+                    }
                     
                 }
             }
@@ -451,7 +456,9 @@ fileprivate struct SwipeRestore: View {
                     print("\(activity.name) restored!")
                     #endif
                     
-                    activity.deletedAt = nil
+                    withAnimation {
+                        activity.deletedAt = nil
+                    }
                     
                 }
             }
@@ -495,7 +502,9 @@ fileprivate struct SwipeUncheck: View {
                 print("\(activity.name) unchecked!")
                 #endif
                 
-                activity.checked = false
+                withAnimation {
+                    activity.checked = false
+                }
                 
             }
             
@@ -523,7 +532,7 @@ fileprivate struct AddActivitySheet: View {
     @State private var errorFlag: Bool = false
     
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) var context
+    @EnvironmentObject var dataValidity: Cache.Validity
     
     var body: some View {
         
@@ -641,7 +650,7 @@ fileprivate struct AddActivitySheet: View {
         Task.detached(){
             
             // Add Activity
-            let addActivityAux = addActivity(token: token!, finishDate: date, isPrivate: isPrivate, name: activityName, userSubject: userSubject, type: type, value: value)
+            let addActivityAux: Activity? = addActivity(token: token!, finishDate: date, isPrivate: isPrivate, name: activityName, userSubject: userSubject, type: type, value: value)
             
             if(addActivityAux == nil){
                 return
@@ -652,6 +661,9 @@ fileprivate struct AddActivitySheet: View {
                 #if DEBUG
                 print("\(activityName) added!")
                 #endif
+                
+                // Triggers Reload of Data
+                dataValidity.valid = false
                 
                 // Dismiss Sheet
                 dismiss()

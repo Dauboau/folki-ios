@@ -235,6 +235,8 @@ fileprivate struct AddAbsenceSheet: View {
                     print("\(userSubject.subjectClass.subject.name) absence added!")
                     #endif
                     
+                    userSubject.absences = userSubject.absences + 1
+                    
                     // Dismiss Sheet
                     dismiss()
                     
