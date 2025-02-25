@@ -67,6 +67,10 @@ class AddActivityResponse: Decodable {
     let activity: Activity
 }
 
+class EditActivityResponse: Decodable {
+    let succesful: Bool
+}
+
 class Cache {
     
     static let shared = Cache()

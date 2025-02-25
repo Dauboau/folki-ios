@@ -532,3 +532,47 @@ func addActivity(token: String, description: String = "", finishDate: Date, isPr
     }
     
 }
+
+func editActivity(token: String, activityId: Int, description: String = "", finishDate: Date, name: String, userSubject: UserSubject, type: String, value: Float) -> Bool? {
+    
+    let isoFormatter = ISO8601DateFormatter()
+    isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    let finishDateISO: String = isoFormatter.string(from: finishDate)
+    
+    let body: [String: Any?] = [
+        "description": description,
+        "finishDate": finishDateISO,
+        "name": name,
+        "subjectClassId": userSubject.subjectClass.id,
+        "type": type,
+        "value": value
+    ]
+    
+    do {
+        let response = Just.patch(url + "/activities/\(activityId)", json: body, headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let editActivityResponse: EditActivityResponse = try JSONDecoder().decode(EditActivityResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetUserActivitiesResponse(forToken: token)
+        
+        return editActivityResponse.succesful
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}

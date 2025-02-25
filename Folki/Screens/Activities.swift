@@ -18,6 +18,7 @@ struct Activities: View {
     @State var expandedDeleted : Bool = true
     
     @State private var addActivityPopover = false
+    @State var editActivity: Activity?
     
     var body: some View {
         
@@ -47,6 +48,10 @@ struct Activities: View {
                         AddActivitySheet(userSubjects)
                     })
                     
+                    .sheet(item: $editActivity){activity in
+                        EditActivitySheet(activity,userSubjects)
+                    }
+                    
                     HStack{
                         Text("\(activities.count{$0.checked != true && $0.deletedAt == nil && $0.isLate() == false}) Atividade(s) Restante(s)!")
                             .foregroundColor(.white)
@@ -71,7 +76,7 @@ struct Activities: View {
                                         }
                                         .swipeActions(edge: .trailing,allowsFullSwipe: false){
                                             SwipeDelete(activity: activity)
-                                            SwipeEdit(activity: activity)
+                                            SwipeEdit(activity: activity,editActivity: $editActivity)
                                         }
                                     
                                 }
@@ -101,7 +106,7 @@ struct Activities: View {
                                         }
                                         .swipeActions(edge: .trailing,allowsFullSwipe: false){
                                             SwipeDelete(activity: activity)
-                                            SwipeEdit(activity: activity)
+                                            SwipeEdit(activity: activity,editActivity: $editActivity)
                                         }
                                     
                                 }
@@ -131,7 +136,7 @@ struct Activities: View {
                                         }
                                         .swipeActions(edge: .trailing,allowsFullSwipe: false){
                                             SwipeDelete(activity: activity)
-                                            SwipeEdit(activity: activity)
+                                            SwipeEdit(activity: activity,editActivity: $editActivity)
                                         }
                                     
                                 }
@@ -353,11 +358,12 @@ fileprivate struct SwipeCheck: View {
 fileprivate struct SwipeEdit: View {
     
     let activity : Activity
+    var editActivity: Binding<Activity?> = .constant(nil)
     
     var body: some View {
         
         Button("Editar",systemImage: "square.and.pencil"){
-            print("WIP - Editar Atividade")
+            editActivity.wrappedValue = activity
         }
         .tint(Color("Gray_2"))
         
@@ -668,6 +674,157 @@ fileprivate struct AddActivitySheet: View {
                 // Dismiss Sheet
                 dismiss()
                 
+            }
+            
+        }
+    }
+    
+}
+
+fileprivate struct EditActivitySheet: View {
+    
+    let token : String? = UserDefaults.standard.string(forKey: "token")
+    
+    let activity: Activity
+    let userSubjects: [UserSubject]
+    
+    init(_ activity: Activity,_ userSubjects: [UserSubject]) {
+        self.userSubjects = userSubjects
+        self.activity = activity
+        
+        self.activityName = activity.name
+        self.date = activity.getDeadlineDate() ?? Date()
+        self.value = String(activity.value)
+        self.type = activity.type
+        
+        let subjectId:Int = userSubjects.first(where: { $0.subjectClass.id == Int(activity.subjectClassId) })!.id
+        self.subjectIdString = String(subjectId)
+    }
+    
+    @State private var activityName: String
+    @State private var date: Date
+    @State private var value: String
+    @State private var type: String
+    @State private var subjectIdString: String
+    @State private var errorFlag: Bool = false
+    
+    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var dataValidity: Cache.Validity
+    
+    var body: some View {
+        
+        ZStack{
+            
+            DefaultBackground()
+            
+            VStack{
+                
+                Text("Atualizar Atividade")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding(CSS.paddingBottomText)
+                
+                TextField("Nome da Atividade", text: $activityName)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(CSS.paddingBottomText)
+                
+                TextField("Valor da Atividade (0 até 10)", text: $value)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(CSS.paddingBottomText)
+                
+                DatePicker("Data", selection: $date, displayedComponents: [.date])
+                    .datePickerStyle(.compact)
+                    .foregroundColor(.white)
+                    .environment(\.colorScheme, .dark)
+                    .padding(.horizontal,5)
+                    .padding(CSS.paddingBottomText)
+                
+                HStack{
+                    Picker(selection: $type, label: Text("Tipo de Atividade")) {
+                        Text("Tipo de Atividade").tag("")
+                        Text("Prova").tag("EXAM")
+                        Text("Trabalho").tag("HOMEWORK")
+                        Text("Atividade").tag("ACTIVITY")
+                        Text("Lista").tag("LIST")
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.white)
+                    Spacer()
+                }
+                
+                HStack{
+                    Picker(selection: $subjectIdString, label: Text("Disciplina da Atividade")) {
+                        Text("Disciplina da Atividade").tag("")
+                        ForEach(userSubjects){
+                            userSubject in
+                            Text(userSubject.subjectClass.subject.name).tag(String(userSubject.id))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.white)
+                    Spacer()
+                }
+                
+                HStack{
+                    Button(action: {
+                        
+                        if(activityName.isEmpty || value.isEmpty || type.isEmpty || subjectIdString.isEmpty){
+                            errorFlag = true
+                            return
+                        }
+                        
+                        let userSubject: UserSubject = userSubjects.first(where: { $0.id == Int(subjectIdString)! })!
+                        
+                        editData(activity, activityName, date, Float(value) ?? 0, type, userSubject)
+                        
+                    }) {
+                        Text("Criar")
+                            .frame(maxWidth: CSS.maxWidth)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.primaryPurple)
+                    .controlSize(.regular)
+                    .padding(.top,20)
+                }
+                
+                .alert("Erro de Preenchimento", isPresented: $errorFlag, actions: {
+                    Button("Tentar Novamente") {}
+                }, message: {
+                    Text("Por favor preencha todos os campos.")
+                })
+                
+            }
+            .safeAreaPadding()
+            
+        }
+        
+    }
+    
+    func editData(_ activity: Activity,_ activityName: String,_ date: Date,_ value: Float,_ type: String,_ userSubject: UserSubject){
+        Task.detached(){
+            
+            // Edit Activity
+            let editActivityAux: Bool? = editActivity(token: token!, activityId: activity.id, finishDate: date, name: activityName, userSubject: userSubject, type: type, value: value)
+            
+            if(editActivityAux == nil){
+                return
+            }
+            
+            if(editActivityAux!){
+                await MainActor.run{
+                    
+                    #if DEBUG
+                    print("\(activity.name) edited!")
+                    #endif
+                    
+                    // Triggers Reload of Data
+                    dataValidity.valid = false
+                    
+                    // Dismiss Sheet
+                    dismiss()
+                    
+                }
             }
             
         }
