@@ -65,7 +65,7 @@ struct NavigationView: View {
             .defaultVisibility(.hidden, for: .sidebar)
             
             Tab("Atividades", systemImage: "bookmark.fill") {
-                Activities(activities: activities)
+                Activities(activities: activities, userSubjects: userSubjects)
             }
             .customizationID("com.myApp.activities")
             

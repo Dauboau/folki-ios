@@ -10,11 +10,14 @@ import SwiftUI
 struct Activities: View {
     
     let activities : [Activity]
+    let userSubjects : [UserSubject]
     
     @State var expandedLate : Bool = true
     @State var expandedDue : Bool = true
     @State var expandedChecked : Bool = true
     @State var expandedDeleted : Bool = true
+    
+    @State private var addActivityPopover = false
     
     var body: some View {
         
@@ -33,12 +36,16 @@ struct Activities: View {
                             .foregroundColor(.white)
                         Spacer()
                         Button("Adicionar Atividade",systemImage: "plus"){
-                            print("WIP - Adicionar Atividade")
+                            addActivityPopover = true
                         }
                         .labelStyle(.iconOnly)
                         .tint(.white)
                     }
                     .padding(.bottom,CSS.paddingBottomText)
+                    
+                    .sheet(isPresented: $addActivityPopover, content:{
+                        AddActivitySheet(userSubjects)
+                    })
                     
                     HStack{
                         Text("\(activities.count{$0.checked != true && $0.deletedAt == nil && $0.isLate() == false}) Atividade(s) Restante(s)!")
@@ -203,6 +210,41 @@ struct Activities: View {
                 )
             ),
         checked:false
+        )
+    ], userSubjects: [
+        UserSubject(
+            id: 39275,
+            absences: 0,
+            grading: 4.2,
+            subjectClass: SubjectClass(
+                id: 21074,
+                availableDays: [
+                    AvailableDay(day: "qua", start: "14:00", end: "17:00")
+                ],
+                subject: Subject(
+                    id: 15461,
+                    name: "Multimídia",
+                    code: "SCC0261",
+                    driveItemsNumber: 0
+                )
+            )
+        ),
+        UserSubject(
+            id: 392753,
+            absences: 1,
+            grading: 4.2,
+            subjectClass: SubjectClass(
+                id: 21074,
+                availableDays: [
+                    AvailableDay(day: "qua", start: "14:00", end: "17:00")
+                ],
+                subject: Subject(
+                    id: 15461,
+                    name: "Processamento de Linguagem Natural",
+                    code: "SCC0261",
+                    driveItemsNumber: 0
+                )
+            )
         )
     ])
 }
@@ -454,6 +496,165 @@ fileprivate struct SwipeUncheck: View {
                 #endif
                 
                 activity.checked = false
+                
+            }
+            
+        }
+    }
+    
+}
+
+fileprivate struct AddActivitySheet: View {
+    
+    let token : String? = UserDefaults.standard.string(forKey: "token")
+    
+    let userSubjects : [UserSubject]
+    
+    init(_ userSubjects: [UserSubject]) {
+        self.userSubjects = userSubjects
+    }
+    
+    @State private var activityName = ""
+    @State private var date = Date()
+    @State private var value = ""
+    @State private var type = ""
+    @State private var subjectIdString = ""
+    @State private var publicString = ""
+    @State private var errorFlag: Bool = false
+    
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var context
+    
+    var body: some View {
+        
+        ZStack{
+            
+            DefaultBackground()
+            
+            VStack{
+                
+                Text("Nova Atividade")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding(CSS.paddingBottomText)
+                
+                TextField("Nome da Atividade", text: $activityName)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(CSS.paddingBottomText)
+                
+                TextField("Valor da Atividade (0 até 10)", text: $value)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(CSS.paddingBottomText)
+                
+                DatePicker("Data", selection: $date, displayedComponents: [.date])
+                    .datePickerStyle(.compact)
+                    .foregroundColor(.white)
+                    .environment(\.colorScheme, .dark)
+                    .padding(.horizontal,5)
+                    .padding(CSS.paddingBottomText)
+                
+                HStack{
+                    Picker(selection: $type, label: Text("Tipo de Atividade")) {
+                        Text("Tipo de Atividade").tag("")
+                        Text("Prova").tag("EXAM")
+                        Text("Trabalho").tag("HOMEWORK")
+                        Text("Atividade").tag("ACTIVITY")
+                        Text("Lista").tag("LIST")
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.white)
+                    Spacer()
+                }
+                
+                HStack{
+                    Picker(selection: $subjectIdString, label: Text("Disciplina da Atividade")) {
+                        Text("Disciplina da Atividade").tag("")
+                        ForEach(userSubjects){
+                            userSubject in
+                            Text(userSubject.subjectClass.subject.name).tag(String(userSubject.id))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.white)
+                    Spacer()
+                }
+                
+                HStack{
+                    Picker(selection: $publicString, label: Text("A Atividade é Pública?")) {
+                        Text("A Atividade é Pública?").tag("")
+                        Text("Atividade Pública").tag("Sim")
+                        Text("Atividade Privada").tag("Não")
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.white)
+                    Spacer()
+                }
+                
+                HStack{
+                    Button(action: {
+                        
+                        if(activityName.isEmpty || value.isEmpty || type.isEmpty || subjectIdString.isEmpty || publicString.isEmpty){
+                            errorFlag = true
+                            return
+                        }
+                        
+                        let isPrivate: Bool = {
+                            switch publicString {
+                                case "Sim":
+                                    return false
+                                case "Não":
+                                    return true
+                                default:
+                                    return true
+                            }
+                        }()
+                        
+                        let userSubject: UserSubject = userSubjects.first(where: { $0.id == Int(subjectIdString)! })!
+                        
+                        addData(activityName, date, Float(value) ?? 0, type, userSubject, isPrivate)
+                        
+                    }) {
+                        Text("Criar")
+                            .frame(maxWidth: CSS.maxWidth)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.primaryPurple)
+                    .controlSize(.regular)
+                    .padding(.top,20)
+                }
+                
+                .alert("Erro de Preenchimento", isPresented: $errorFlag, actions: {
+                    Button("Tentar Novamente") {}
+                }, message: {
+                    Text("Por favor preencha todos os campos.")
+                })
+                
+            }
+            .safeAreaPadding()
+            
+        }
+        
+    }
+    
+    func addData(_ activityName: String,_ date: Date,_ value: Float,_ type: String,_ userSubject: UserSubject, _ isPrivate: Bool){
+        Task.detached(){
+            
+            // Add Activity
+            let addActivityAux = addActivity(token: token!, finishDate: date, isPrivate: isPrivate, name: activityName, userSubject: userSubject, type: type, value: value)
+            
+            if(addActivityAux == nil){
+                return
+            }
+            
+            await MainActor.run{
+                
+                #if DEBUG
+                print("\(activityName) added!")
+                #endif
+                
+                // Dismiss Sheet
+                dismiss()
                 
             }
             

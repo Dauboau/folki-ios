@@ -63,7 +63,7 @@ struct Absences: View {
                     .contentMargins(.vertical, 0)
                     
                     .sheet(item: $addAbsenceSubject){userSubject in
-                        addAbsenceSheet(userSubject: userSubject)
+                        AddAbsenceSheet(userSubject: userSubject)
                     }
                     
                 }
@@ -171,7 +171,7 @@ fileprivate struct AbsencesCard: View {
     }
 }
 
-fileprivate struct addAbsenceSheet: View {
+fileprivate struct AddAbsenceSheet: View {
     
     let token : String? = UserDefaults.standard.string(forKey: "token")
     

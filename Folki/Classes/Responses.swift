@@ -63,6 +63,10 @@ class AddGradeResponse: Decodable {
     let succesful: Bool
 }
 
+class AddActivityResponse: Decodable {
+    let activity: Activity
+}
+
 class Cache {
     
     static let shared = Cache()

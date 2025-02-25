@@ -487,3 +487,48 @@ func addGrade(token: String, subjectId: Int, name: String, percentage: Float, va
     }
     
 }
+
+func addActivity(token: String, description: String = "", finishDate: Date, isPrivate: Bool, name: String, userSubject: UserSubject, type: String, value: Float) -> Activity? {
+    
+    let isoFormatter = ISO8601DateFormatter()
+    isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    let finishDateISO: String = isoFormatter.string(from: finishDate)
+    
+    let body: [String: Any?] = [
+        "description": description,
+        "finishDate": finishDateISO,
+        "isPrivate": isPrivate,
+        "name": name,
+        "subjectClassId": userSubject.subjectClass.id,
+        "type": type,
+        "value": value
+    ]
+    
+    do {
+        let response = Just.post(url + "/activities", json: body, headers: ["Authorization": "Bearer \(token)"])
+        
+        guard (200...299).contains(response.statusCode ?? 500) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonStr = response.text else {
+            throw URLError(.badServerResponse)
+        }
+        
+        guard let jsonData = jsonStr.data(using: .utf8) else {
+            throw URLError(.cannotDecodeContentData)
+        }
+        
+        let addActivityResponse: AddActivityResponse = try JSONDecoder().decode(AddActivityResponse.self, from: jsonData)
+        
+        // Invalidate the Cache
+        Cache.shared.invalidateCacheGetUserActivitiesResponse(forToken: token)
+        
+        return addActivityResponse.activity
+        
+    } catch {
+        print("An error occurred: \(error)")
+        return nil
+    }
+    
+}

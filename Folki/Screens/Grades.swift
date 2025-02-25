@@ -63,7 +63,7 @@ struct Grades: View {
                     .contentMargins(.vertical, 0)
                     
                     .sheet(item: $addGradeSubject){userSubject in
-                        addGradeSheet(userSubject: userSubject)
+                        AddGradeSheet(userSubject: userSubject)
                     }
                     
                 }
@@ -182,7 +182,7 @@ fileprivate struct GradeCard: View {
     }
 }
 
-fileprivate struct addGradeSheet: View {
+fileprivate struct AddGradeSheet: View {
     
     let token : String? = UserDefaults.standard.string(forKey: "token")
     
