@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import _SwiftData_SwiftUI
 
 /**
  Hub for waiting the login process
  */
 struct LoginHub: View {
     
+    @Query() private var users: [User]
+    var user: User? { users.first }
     @Environment(\.dismiss) private var dismiss
     
     // Login Requirements
@@ -20,6 +23,7 @@ struct LoginHub: View {
     @State var universityId : Int
     
     @State var loginFlag : Bool = true
+    @Binding var updateSubjectsFlag: Bool
     
     @State private var errorFlag = false
     
@@ -78,6 +82,11 @@ struct LoginHub: View {
             }else{
                 
                 NavigationView()
+                    .onAppear(){
+                        if(updateSubjectsFlag == true){
+                            updateSubjectsFlag = false
+                        }
+                    }
                 
             }
             
@@ -87,7 +96,7 @@ struct LoginHub: View {
 }
 
 #Preview {
-    LoginHub(studentRA: "12547614", studentPassword: "bymxox-tubTed-1jufpu", universityId: 1)
+    LoginHub(studentRA: "12547614", studentPassword: "bymxox-tubTed-1jufpu", universityId: 1, updateSubjectsFlag: .constant(false))
 }
 
 /**

@@ -15,6 +15,8 @@ struct Settings: View {
     
     @Environment(\.modelContext) var context
     
+    @State var updateSubjects: Bool = false
+    
     var body: some View {
         
         NavigationStack {
@@ -49,18 +51,12 @@ struct Settings: View {
                         })
                          */
                         
-                        NavigationLink(destination:
-                            Login(university: "\(user.university!.slug)")
-                        ){
-                            Text("Atualizar Disciplinas")
-                                .bold()
-                                .frame(maxWidth: .infinity)
-                                .padding(CSS.buttonTextPadding)
-                        }
-                        .padding(.vertical,CSS.buttonCardPadding)
-                        .buttonStyle(.borderedProminent)
-                        .tint(Color("Gray_2"))
-                        .controlSize(.regular)
+                        SettingButton(buttonText: "Atualizar Disciplinas", action: {
+                            updateSubjects = true
+                        })
+                        .sheet(isPresented: $updateSubjects, content: {
+                            Login(university: "\(user.university!.slug)",updateSubjects:$updateSubjects)
+                        })
                         
                         SettingButton(buttonText: "Open Source", action: {
                             if let url = URL(string: "https://github.com/Dauboau/folki-ios.git") {

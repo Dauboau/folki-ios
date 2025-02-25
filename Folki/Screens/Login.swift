@@ -34,6 +34,8 @@ struct Login: View {
     @State var progress = 0.2
     var loginTip = LoginTip()
     
+    var updateSubjects: Binding<Bool> = .constant(false)
+    
     var body: some View {
         
         NavigationStack {
@@ -59,7 +61,7 @@ struct Login: View {
                     SecureField("Senha", text: $studentPassword)
                         .textFieldStyle(.roundedBorder)
                     
-                    NavigationLink(destination: LoginHub(studentRA: studentRA, studentPassword: studentPassword, universityId: getUniversityId(university: university)!)) {
+                    NavigationLink(destination: LoginHub(studentRA: studentRA, studentPassword: studentPassword, universityId: getUniversityId(university: university)!, updateSubjectsFlag: updateSubjects)) {
                         Text("Login")
                             .frame(maxWidth: .infinity)
                     }
