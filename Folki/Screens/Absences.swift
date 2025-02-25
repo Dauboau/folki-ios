@@ -185,7 +185,7 @@ fileprivate struct AddAbsenceSheet: View {
         
         ZStack{
             
-            DefaultBackground()
+            DefaultBackgroundSheet()
             
             VStack{
                 

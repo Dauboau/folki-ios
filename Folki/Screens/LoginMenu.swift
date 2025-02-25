@@ -106,8 +106,7 @@ struct WelcomeView: View {
         
         ZStack{
             
-            Color.gray2
-                .ignoresSafeArea()
+            DefaultBackgroundSheet()
             
             VStack{
                 

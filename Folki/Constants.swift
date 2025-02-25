@@ -38,6 +38,16 @@ struct DefaultBackground: View {
     }
 }
 
+struct DefaultBackgroundSheet: View {
+    
+    static let color = "Gray_2"
+    
+    var body: some View {
+        Color(DefaultBackgroundSheet.color)
+            .ignoresSafeArea()
+    }
+}
+
 extension Date {
     
     /**

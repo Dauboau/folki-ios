@@ -544,7 +544,7 @@ fileprivate struct AddActivitySheet: View {
         
         ZStack{
             
-            DefaultBackground()
+            DefaultBackgroundSheet()
             
             VStack{
                 
@@ -715,7 +715,7 @@ fileprivate struct EditActivitySheet: View {
         
         ZStack{
             
-            DefaultBackground()
+            DefaultBackgroundSheet()
             
             VStack{
                 
@@ -779,7 +779,7 @@ fileprivate struct EditActivitySheet: View {
                         editData(activity, activityName, date, Float(value) ?? 0, type, userSubject)
                         
                     }) {
-                        Text("Criar")
+                        Text("Atualizar")
                             .frame(maxWidth: CSS.maxWidth)
                     }
                     .buttonStyle(.borderedProminent)
@@ -818,8 +818,15 @@ fileprivate struct EditActivitySheet: View {
                     print("\(activity.name) edited!")
                     #endif
                     
-                    // Triggers Reload of Data
-                    dataValidity.valid = false
+                    let isoFormatter = ISO8601DateFormatter()
+                    isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                    let finishDateISO: String = isoFormatter.string(from: date)
+                    
+                    activity.name = activityName
+                    activity.finishDate = finishDateISO
+                    activity.value = value
+                    activity.type = type
+                    activity.subjectClass = userSubject.subjectClass
                     
                     // Dismiss Sheet
                     dismiss()

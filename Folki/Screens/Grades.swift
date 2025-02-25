@@ -200,7 +200,7 @@ fileprivate struct AddGradeSheet: View {
         
         ZStack{
             
-            DefaultBackground()
+            DefaultBackgroundSheet()
             
             VStack{
                 
