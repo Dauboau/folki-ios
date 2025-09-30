@@ -124,111 +124,134 @@ struct NavigationView: View {
             // Get activities
             let activitiesAux = getUserActivities(token: token!)
             
-            if(
-                userAux == nil
-                || userSubjectsAux == nil
-                || activitiesAux == nil
-            ){
+            guard let userAuxNonNil = userAux,
+                  let userSubjectsAuxNonNil = userSubjectsAux,
+                  let activitiesAuxNonNil = activitiesAux else {
                 return
             }
+            
+            nonisolated(unsafe) let UserAuxUnsafe = userAuxNonNil
+            nonisolated(unsafe) let UserSubjectsAuxUnsafe = userSubjectsAuxNonNil
+            nonisolated(unsafe) let ActivitiesAuxUnsafe = activitiesAuxNonNil
         
             await MainActor.run{
                 
-                #if DEBUG
-                print(Default.separator)
-                #endif
-                
-                // Inserting and Updating user
-                if user == userAux {
-                    #if DEBUG
-                    print("\(user.name ?? "Usuário") updated!")
-                    #endif
-                    user.update(user: userAux!)
-                }else{
-                    #if DEBUG
-                    print("\(user.name ?? "Usuário") created!")
-                    #endif
-                    context.insert(userAux!)
-                }
-                
-                // Inserting and Updating userSubjects
-                for userSubjectAux in userSubjectsAux! {
-                    
-                    var userSubjectFound = false
-                    for userSubject in userSubjects {
-                        if(userSubject == userSubjectAux){
-                            #if DEBUG
-                            print("\(userSubject.subjectClass.subject.name) updated!")
-                            #endif
-                            userSubjectFound = true
-                            userSubject.update(userSubject: userSubjectAux)
-                            break
-                        }
-                    }
-                    
-                    if(!userSubjectFound){
-                        #if DEBUG
-                        print("\(userSubjectAux.subjectClass.subject.name) created!")
-                        #endif
-                        context.insert(userSubjectAux)
-                    }
-                    
-                }
-                
-                // Inserting and Updating activities
-                for activityAux in activitiesAux! {
-                    
-                    var activityFound = false
-                    for activity in activities {
-                        if(activity == activityAux){
-                            #if DEBUG
-                            print("\(activity.name) updated!")
-                            #endif
-                            activityFound = true
-                            activity.update(activity: activityAux)
-                            break
-                        }
-                    }
-                    
-                    if(!activityFound){
-                        #if DEBUG
-                        print("\(activityAux.name) created!")
-                        #endif
-                        context.insert(activityAux)
-                    }
-                    
-                }
-                
-                // Deleting activities
-                for activity in activities {
-                    if(!activitiesAux!.contains(where: { $0 == activity })){
-                        #if DEBUG
-                        print("\(activity.name) deleted!")
-                        #endif
-                        context.delete(activity)
-                    }
-                }
-                
-                // Deleting userSubjects
-                for userSubject in userSubjects {
-                    if(!userSubjectsAux!.contains(where: { $0 == userSubject })){
-                        #if DEBUG
-                        print("\(userSubject.subjectClass.subject.name) deleted!")
-                        #endif
-                        context.delete(userSubject)
-                    }
-                }
-                
-                // Save to persist the user data
                 do {
-                    try context.save()
-                } catch {
-                    print("Error saving context: \(error)")
-                }
+                    let currentUsersFD = FetchDescriptor<User>()
+                    let currentUsers = try context.fetch(currentUsersFD)
+                    
+                    let currentUserSubjectsFD = FetchDescriptor<UserSubject>(
+                        sortBy: [SortDescriptor(\UserSubject.subjectClass.subject.name)]
+                    )
+                    let currentUserSubjects = try context.fetch(currentUserSubjectsFD)
+                    
+                    let currentActivitiesFD = FetchDescriptor<Activity>(
+                        sortBy: [SortDescriptor(\Activity.finishDate)]
+                    )
+                    let currentActivities = try context.fetch(currentActivitiesFD)
                 
-                #if DEBUG
-                print(Default.separator)
-                #endif
+                    #if DEBUG
+                    print(Default.separator)
+                    #endif
+                
+                    // Inserting and Updating user
+                    if let currentUser = currentUsers.first {
+                        if currentUser == UserAuxUnsafe {
+                            #if DEBUG
+                            print("\(currentUser.name ?? "Usuário") updated!")
+                            #endif
+                            currentUser.update(user: UserAuxUnsafe)
+                        } else {
+                            #if DEBUG
+                            print("\(UserAuxUnsafe.name ?? "Usuário") created!")
+                            #endif
+                            context.insert(UserAuxUnsafe)
+                        }
+                    } else {
+                        #if DEBUG
+                        print("\(UserAuxUnsafe.name ?? "Usuário") created!")
+                        #endif
+                        context.insert(UserAuxUnsafe)
+                    }
+                
+                    // Inserting and Updating userSubjects
+                    for userSubjectAux in UserSubjectsAuxUnsafe {
+                        
+                        var userSubjectFound = false
+                        for userSubject in currentUserSubjects {
+                            if(userSubject == userSubjectAux){
+                                #if DEBUG
+                                print("\(userSubject.subjectClass.subject.name) updated!")
+                                #endif
+                                userSubjectFound = true
+                                userSubject.update(userSubject: userSubjectAux)
+                                break
+                            }
+                        }
+                        
+                        if(!userSubjectFound){
+                            #if DEBUG
+                            print("\(userSubjectAux.subjectClass.subject.name) created!")
+                            #endif
+                            context.insert(userSubjectAux)
+                        }
+                        
+                    }
+                
+                    // Inserting and Updating activities
+                    for activityAux in ActivitiesAuxUnsafe {
+                        
+                        var activityFound = false
+                        for activity in currentActivities {
+                            if(activity == activityAux){
+                                #if DEBUG
+                                print("\(activity.name) updated!")
+                                #endif
+                                activityFound = true
+                                activity.update(activity: activityAux)
+                                break
+                            }
+                        }
+                        
+                        if(!activityFound){
+                            #if DEBUG
+                            print("\(activityAux.name) created!")
+                            #endif
+                            context.insert(activityAux)
+                        }
+                        
+                    }
+                
+                    // Deleting activities
+                    for activity in currentActivities {
+                        if(!ActivitiesAuxUnsafe.contains(where: { $0 == activity })){
+                            #if DEBUG
+                            print("\(activity.name) deleted!")
+                            #endif
+                            context.delete(activity)
+                        }
+                    }
+                
+                    // Deleting userSubjects
+                    for userSubject in currentUserSubjects {
+                        if(!UserSubjectsAuxUnsafe.contains(where: { $0 == userSubject })){
+                            #if DEBUG
+                            print("\(userSubject.subjectClass.subject.name) deleted!")
+                            #endif
+                            context.delete(userSubject)
+                        }
+                    }
+                
+                    // Save to persist the user data
+                    try context.save()
+                
+                    #if DEBUG
+                    print(Default.separator)
+                    #endif
+                    
+                } catch {
+                    print("Error in updateData: \(error)")
+                }
                 
             }
 

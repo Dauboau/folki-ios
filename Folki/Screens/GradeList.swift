@@ -94,14 +94,16 @@ struct GradeList: View {
                 return
             }
             
+            nonisolated(unsafe) let gradeToDelete = grade
+            
             if(succesfulAux!){
                 await MainActor.run{
                     
                     #if DEBUG
-                    print("\(grade.name) deleted!")
+                    print("\(gradeToDelete.name) deleted!")
                     #endif
                     
-                    context.delete(grade)
+                    context.delete(gradeToDelete)
                     
                     // Triggers Reload of Data
                     dataValidity.valid = false
@@ -113,14 +115,17 @@ struct GradeList: View {
     }
     
     func updateData() {
+        let subjectId = userSubject.id
         Task.detached(){
             
             // Get grades
-            let gradesAux = await getGrades(token: token!, subjectId: userSubject.id)
+            let gradesAux = getGrades(token: token!, subjectId: subjectId)
             
             if(gradesAux == nil){
                 return
             }
+            
+            nonisolated(unsafe) let gradesAuxUnsafe = gradesAux!
             
             await MainActor.run{
                 
@@ -129,7 +134,7 @@ struct GradeList: View {
                 #endif
                 
                 // Inserting and Updating grades
-                for gradeAux in gradesAux! {
+                for gradeAux in gradesAuxUnsafe {
                     
                     var gradeFound = false
                     for grade in grades {
@@ -154,7 +159,7 @@ struct GradeList: View {
                 
                 // Deleting grades
                 for grade in grades {
-                    if(!gradesAux!.contains(where: { $0 == grade })){
+                    if(!gradesAuxUnsafe.contains(where: { $0 == grade })){
                         #if DEBUG
                         print("\(grade.name) deleted!")
                         #endif
@@ -234,3 +239,6 @@ struct GradeListCard: View {
         
     }
 }
+
+
+

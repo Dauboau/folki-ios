@@ -106,14 +106,17 @@ struct AbsenceList: View {
     }
     
     func updateData() {
+        let subjectId = userSubject.id
         Task.detached(){
             
             // Get absences
-            let absencesAux = await getAbsences(token: token!, subjectId: userSubject.id)
+            let absencesAux = getAbsences(token: token!, subjectId: subjectId)
             
             if(absencesAux == nil){
                 return
             }
+            
+            nonisolated(unsafe) let absencesAuxUnsafe = absencesAux!
             
             await MainActor.run{
                 
@@ -122,7 +125,7 @@ struct AbsenceList: View {
             #endif
 
             // Inserting and Updating absences
-            for absenceAux in absencesAux! {
+            for absenceAux in absencesAuxUnsafe {
                 
                 var absenceFound = false
                 for absence in absences {
@@ -147,7 +150,7 @@ struct AbsenceList: View {
 
             // Deleting absences
             for absence in absences {
-                if(!absencesAux!.contains(where: { $0 == absence })){
+                if(!absencesAuxUnsafe.contains(where: { $0 == absence })){
                     #if DEBUG
                     print("\(absence.date) deleted!")
                     #endif
@@ -220,3 +223,6 @@ struct AbsenceListCard: View {
         
     }
 }
+
+
+
